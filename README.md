@@ -2,7 +2,7 @@
 
 Internes Werkzeug (Leads, Pipeline, Kunden, KI-Funktionen) des Website Business OS.
 Login-geschützt, nur für den Owner. Planungsdokumente liegen im übergeordneten
-Docs-Repo (`../docs`). Stand: **Milestone 0** (Login + leere App).
+Docs-Repo (`../docs`). Stand: **Milestone 1** (Login/Logout + App-Shell mit Navigation, Seiten noch leer).
 
 Stack: Next.js 16 (App Router, Cache Components) · TypeScript strict · Tailwind 4 ·
 shadcn/ui · Supabase (Auth + Postgres, Region Frankfurt).
@@ -51,7 +51,9 @@ Neue Migrationen werden fortlaufend nummeriert und nie nachträglich geändert.
 ## Aufbau
 
 - `app/(auth)/login` — Login (Server Action, Zod-validiert)
-- `app/(app)/…` — geschützter Bereich; `AuthGate` im Layout prüft die Session
+- `app/(app)/…` — geschützter Bereich mit App-Shell (Sidebar: Dashboard · Leads · Customers, Abmelden);
+  `AuthGate` im Layout prüft die Session, `actions.ts` enthält `signOut`
+- `components/domain/` — fachliche Bausteine (`SidebarNav`, `KpiCard`, `PageHeader`)
 - `proxy.ts` — Session-Refresh + optimistischer Redirect (verbindlich prüft das Layout, Daten schützt RLS)
 - `lib/supabase/server.ts` — authentifizierter Client (RLS greift)
 - `components/ui/` — shadcn-Primitives; Palette/Fonts in `app/globals.css`
