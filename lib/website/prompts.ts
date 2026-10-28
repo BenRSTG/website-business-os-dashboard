@@ -3,6 +3,7 @@ import { LEAD_INDUSTRY_LABELS } from "@/lib/leads/constants";
 import type { CompanyProfileRow } from "@/lib/intelligence/types";
 import { sanitizeUntrusted } from "@/lib/intelligence/untrusted";
 import type { Lead } from "@/lib/leads/types";
+import { FEATURE_LABELS, type Feature } from "./features";
 import { PALETTE_IDS } from "./palettes";
 import { SITE_STYLES } from "./tokens";
 
@@ -44,6 +45,28 @@ export const leistungenCopySchema = z.object({
   contact_intro: text(300),
 });
 export type LeistungenCopy = z.infer<typeof leistungenCopySchema>;
+
+// Texte der gewählten Bausteine. Felder für nicht gewählte Bausteine bleiben null. Zahlen, Preise, Namen und Zeiten schreibt
+// die KI nie selbst; Öffnungszeiten und Einsatzgebiet nur wörtlich aus verifizierten Fakten.
+export const featureCopySchema = z.object({
+  hours_headline: text(100).nullable(),
+  hours_intro: text(300).nullable(),
+  opening_hours: z.array(z.object({ days: text(40), hours: text(60) })).max(7),
+  service_area: text(400).nullable(),
+  gallery_headline: text(100).nullable(),
+  gallery_intro: text(300).nullable(),
+  pricing_headline: text(100).nullable(),
+  pricing_intro: text(300).nullable(),
+  pricing_note: text(300).nullable(),
+  pricing_items: z
+    .array(z.object({ title: text(80), description: text(300), features: z.array(text(80)).max(4) }))
+    .max(3),
+  team_headline: text(100).nullable(),
+  team_intro: text(300).nullable(),
+  booking_headline: text(100).nullable(),
+  booking_intro: text(300).nullable(),
+});
+export type FeatureCopy = z.infer<typeof featureCopySchema>;
 
 export const seoOutputSchema = z.object({
   pages: z
@@ -151,6 +174,29 @@ Aufgabe: Texte für die Seite "Leistungen" und die Einleitung der Kontaktseite.
 - headline und intro: Überschrift und Einleitung der Leistungsseite.
 - items: 3 bis 8 Leistungen mit je kurzem Titel und einer Beschreibung von ein bis zwei Sätzen.
 - contact_headline und contact_intro: freundliche Einladung zur Kontaktaufnahme, ohne Telefonnummer oder Adresse.`;
+
+export const FEATURES_SYSTEM_PROMPT = `${COPY_RULES}
+
+Aufgabe: Texte für zusätzliche Bausteine der Website. Im Block <gewaehlte_bausteine> steht, welche gewünscht sind. Für alle anderen Bausteine bleiben die Felder null (bei Listen: leer).
+Zusätzlich zu den Regeln oben gilt:
+- Schreibe niemals Preise, Beträge, Zahlen, Namen von Personen oder Uhrzeiten, außer sie stehen wörtlich in <fakten_verifiziert>.
+- hours_*: opening_hours nur, wenn Öffnungszeiten wörtlich in den verifizierten Fakten stehen (Tage und Zeiten genau so übernehmen), sonst leeres Array. service_area nur, wenn ein Einsatzgebiet in den verifizierten Fakten steht, sonst null.
+- gallery_*: Überschrift und kurze Einleitung zu Beispielen der Arbeit. Keine Behauptungen über konkrete Projekte.
+- pricing_*: Überschrift, Einleitung und Hinweis (z. B. dass Preise nach Besichtigung genannt werden, ohne Beträge). pricing_items: höchstens 3 Pakete, deren Titel zu den Leistungen passen, mit kurzer Beschreibung und höchstens 4 allgemeinen Stichpunkten ohne Zahlen.
+- team_*: nur Überschrift und Einleitung, keine Personen und keine Aussagen über Größe oder Eigenschaften des Teams.
+- booking_*: Überschrift und Einleitung für eine Terminanfrage (der Betrieb bestätigt den Termin persönlich).`;
+
+export function buildFeaturesUserText(brief: string, features: Feature[], home: HomeCopy): string {
+  return [
+    brief,
+    "<gewaehlte_bausteine>",
+    features.filter((f) => f !== "map").map((f) => `- ${FEATURE_LABELS[f]}`).join("\n"),
+    "</gewaehlte_bausteine>",
+    "<leistungen_der_website>",
+    home.services_items.map((i) => `- ${sanitizeUntrusted(i.title)}`).join("\n"),
+    "</leistungen_der_website>",
+  ].join("\n");
+}
 
 export const SEO_SYSTEM_PROMPT = `Du schreibst Suchmaschinen-Titel und Beschreibungen für die drei Seiten einer Handwerker-Website (Startseite "/", "/leistungen", "/kontakt").
 - title: höchstens 60 Zeichen, enthält Betriebsname oder Branche und Ort.

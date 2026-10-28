@@ -18,6 +18,7 @@ import {
   type RunAi,
   type RunState,
 } from "./pipeline";
+import { DEFAULT_FEATURES, normalizeFeatures, type Feature } from "./features";
 import { generatePassword } from "./password";
 import { revalidateSites } from "./revalidate";
 import { previewSlug } from "./slug";
@@ -55,7 +56,7 @@ function userMessage(error: unknown): string {
   return "Unerwarteter Fehler. Bitte erneut versuchen.";
 }
 
-export async function startDemoRun(leadId: string): Promise<DemoStepResult> {
+export async function startDemoRun(leadId: string, requestedFeatures?: string[]): Promise<DemoStepResult> {
   const { supabase } = await requireUser();
   if (!leadIdSchema.safeParse(leadId).success) return fail("Ungültiger Lead.");
   const lead = await getLead(leadId);
@@ -82,7 +83,7 @@ export async function startDemoRun(leadId: string): Promise<DemoStepResult> {
 
     const { data: created, error } = await supabase
       .from("site_generation_runs")
-      .insert({ lead_id: lead.id, current_step: STEPS[0] })
+      .insert({ lead_id: lead.id, current_step: STEPS[0], state: { features: requestedFeatures === undefined ? DEFAULT_FEATURES : normalizeFeatures(requestedFeatures) } })
       .select("id")
       .single();
     if (error) return fail("Der Lauf konnte nicht gestartet werden.");
@@ -132,7 +133,7 @@ export async function advanceDemoRun(runId: string, expectedStep: string): Promi
         await failRun(supabase, runId, message, true, result.report);
         return fail(message);
       }
-      const saved = await saveDemoSite(supabase, lead, result, spent);
+      const saved = await saveDemoSite(supabase, lead, result, spent, state.features ?? DEFAULT_FEATURES);
       const siteId = saved.siteId;
       await supabase
         .from("site_generation_runs")
@@ -199,6 +200,7 @@ async function saveDemoSite(
   lead: Lead,
   result: AssembleResult,
   costEur: number,
+  features: Feature[],
 ): Promise<{ siteId: string; slug: string; password: string; replacedSlugs: string[] }> {
   const password = generatePassword();
   let slug = "";
@@ -217,6 +219,7 @@ async function saveDemoSite(
         primary_phone: lead.phone,
         primary_cta_label: lead.phone ? "Jetzt anrufen" : "Anfrage senden",
         generation_cost_estimate: costEur,
+        features,
       })
       .select("id")
       .single();

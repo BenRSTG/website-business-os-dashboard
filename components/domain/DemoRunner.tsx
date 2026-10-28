@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PasswordReveal } from "@/components/domain/PasswordReveal";
 import { advanceDemoRun, startDemoRun } from "@/lib/website/actions";
+import { DEFAULT_FEATURES, FEATURES, FEATURE_HINTS, FEATURE_LABELS, type Feature } from "@/lib/website/features";
 import { STEPS, STEP_LABELS, type StepId } from "@/lib/website/steps";
 
 // Der Browser führt den Lauf Schritt für Schritt aus: jeder Schritt ist ein eigener, kurzer Server-Aufruf.
@@ -15,6 +16,7 @@ export function DemoRunner({
   confirmText,
   resume,
   variant = "default",
+  defaultFeatures,
 }: {
   leadId: string;
   label: string;
@@ -23,11 +25,14 @@ export function DemoRunner({
   /** Unterbrochener Lauf, der fortgesetzt werden kann */
   resume?: { runId: string; step: StepId };
   variant?: "default" | "outline";
+  /** Vorbelegung der Feature-Auswahl (bei „Neu erzeugen“ die letzte Auswahl) */
+  defaultFeatures?: Feature[];
 }) {
   const router = useRouter();
   const [running, setRunning] = useState(false);
   const [step, setStep] = useState<StepId | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [features, setFeatures] = useState<Feature[]>(defaultFeatures ?? DEFAULT_FEATURES);
   const [created, setCreated] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
 
@@ -59,7 +64,7 @@ export function DemoRunner({
       if (resume) {
         await drive(resume.runId, resume.step);
       } else {
-        const started = await startDemoRun(leadId);
+        const started = await startDemoRun(leadId, features);
         if (started.error || !started.runId || !started.step) {
           setError(started.error ?? "Der Lauf konnte nicht gestartet werden.");
           return;
@@ -77,6 +82,31 @@ export function DemoRunner({
 
   return (
     <div className="flex flex-col items-start gap-3">
+      {!resume && !running ? (
+        <fieldset className="w-full">
+          <legend className="text-sm font-semibold">Gewünschte Bausteine</legend>
+          <ul className="mt-2 flex flex-col gap-2">
+            {FEATURES.map((feature) => (
+              <li key={feature}>
+                <label className="flex cursor-pointer items-start gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5 size-4 accent-[var(--primary)]"
+                    checked={features.includes(feature)}
+                    onChange={(e) =>
+                      setFeatures((current) => (e.target.checked ? [...current, feature] : current.filter((f) => f !== feature)))
+                    }
+                  />
+                  <span>
+                    {FEATURE_LABELS[feature]}
+                    <span className="block text-xs text-muted-foreground">{FEATURE_HINTS[feature]}</span>
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      ) : null}
       <Button variant={variant} disabled={running} onClick={run}>
         {running ? "Wird erstellt …" : label}
       </Button>

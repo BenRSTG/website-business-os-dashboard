@@ -4,18 +4,23 @@ import { AiBudgetError, type AiTier } from "@/lib/ai/types";
 import type { CompanyProfileRow } from "@/lib/intelligence/types";
 import type { Lead } from "@/lib/leads/types";
 import { composePages, type PageDraft } from "./compose";
+import { DEFAULT_FEATURES, needsFeatureCopy, type Feature } from "./features";
 import { paletteIdsFor, tokensFor } from "./palettes";
 import {
   HOME_SYSTEM_PROMPT,
   LEISTUNGEN_SYSTEM_PROMPT,
+  FEATURES_SYSTEM_PROMPT,
   PLAN_SYSTEM_PROMPT,
   SEO_SYSTEM_PROMPT,
   buildBrief,
+  buildFeaturesUserText,
   buildSeoUserText,
+  featureCopySchema,
   homeCopySchema,
   leistungenCopySchema,
   planSchema,
   seoOutputSchema,
+  type FeatureCopy,
   type HomeCopy,
   type LeistungenCopy,
   type Plan,
@@ -29,6 +34,9 @@ import type { DesignTokens, SiteStyle } from "./tokens";
 
 /** Zwischenstand eines Laufs (steht in site_generation_runs.state) */
 export interface RunState {
+  /** Gewählte Bausteine (Etappe 4C); ohne Angabe gilt der Standard */
+  features?: Feature[];
+  featureCopy?: FeatureCopy | null;
   plan?: Plan;
   home?: HomeCopy;
   leistungen?: LeistungenCopy;
@@ -102,13 +110,15 @@ export function assemble(lead: Lead, profile: CompanyProfileRow, state: RunState
     home: state.home,
     leistungen: state.leistungen,
     seo: state.seo ?? null,
+    features: state.features ?? DEFAULT_FEATURES,
+    featureCopy: state.featureCopy ?? null,
   });
   const report = checkQuality({
     lead,
     facts: profile.facts,
     tokens,
     pages,
-    aiCopy: { home: state.home, leistungen: state.leistungen, seo: state.seo ?? null },
+    aiCopy: { home: state.home, leistungen: state.leistungen, featureCopy: state.featureCopy ?? null, seo: state.seo ?? null },
   });
   return { style: plan.style, tokens, pages, report };
 }
@@ -133,6 +143,21 @@ export async function executeAiStep(
     case "copy_leistungen": {
       const r = await runAi({ step: "demo_copy_leistungen", tier: "capable", system: LEISTUNGEN_SYSTEM_PROMPT, userText: brief, schema: leistungenCopySchema, maxTokens: 4000 });
       return { state: { ...state, leistungen: r.output }, costEur: r.costEur };
+    }
+    case "copy_features": {
+      const features = state.features ?? DEFAULT_FEATURES;
+      // Ohne Bausteine, die Text brauchen, gibt es keinen KI-Aufruf und keine Kosten.
+      if (!needsFeatureCopy(features)) return { state: { ...state, featureCopy: null }, costEur: 0 };
+      if (!state.home) throw new Error(`${FAILED} (Texte fehlen)`);
+      const r = await runAi({
+        step: "demo_copy_features",
+        tier: "capable",
+        system: FEATURES_SYSTEM_PROMPT,
+        userText: buildFeaturesUserText(brief, features, state.home),
+        schema: featureCopySchema,
+        maxTokens: 3000,
+      });
+      return { state: { ...state, featureCopy: r.output }, costEur: r.costEur };
     }
     case "seo": {
       if (!state.home || !state.leistungen) throw new Error(`${FAILED} (Texte fehlen)`);

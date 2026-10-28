@@ -4,7 +4,8 @@ import { LEAD_INDUSTRY_LABELS } from "@/lib/leads/constants";
 import { telHref } from "./content/links";
 import type { Section } from "./content/schemas";
 import { datenschutzSection, impressumSection, type LegalFacts } from "./legal";
-import { fitText, type HomeCopy, type LeistungenCopy, type Plan, type SeoOutput } from "./prompts";
+import type { Feature } from "./features";
+import { fitText, type FeatureCopy, type HomeCopy, type LeistungenCopy, type Plan, type SeoOutput } from "./prompts";
 import type { SiteStyle } from "./tokens";
 
 export interface PageDraft {
@@ -50,10 +51,14 @@ export interface ComposeInput {
   home: HomeCopy;
   leistungen: LeistungenCopy;
   seo: SeoOutput | null;
+  features: Feature[];
+  featureCopy: FeatureCopy | null;
 }
 
 export function composePages(input: ComposeInput): PageDraft[] {
-  const { lead, plan, style, home, leistungen } = input;
+  const { lead, plan, style, home, leistungen, features, featureCopy } = input;
+  const has = (f: Feature) => features.includes(f);
+  const copy = featureCopy;
   const v = STYLE_VARIANTS[style];
   const address = leadAddress(lead);
   const callLabel = lead.phone ? "Jetzt anrufen" : "Anfrage senden";
@@ -121,6 +126,73 @@ export function composePages(input: ComposeInput): PageDraft[] {
       ]
     : undefined;
 
+  // --- Bausteine der Feature-Auswahl. Unbekanntes bleibt ein markierter Platzhalter, nie eine Erfindung.
+  const PLACEHOLDER = "[bitte ergänzen]";
+  const serviceTitles = home.services_items.map((i) => i.title);
+
+  const teamSection: Section = {
+    component_type: "team",
+    variant: "cards",
+    content: {
+      headline: copy?.team_headline ?? "Ihre Ansprechpartner",
+      intro: copy?.team_intro ?? null,
+      members: [
+        { name: lead.contact_name ?? "[Name ergänzen]", role: lead.contact_name ? "Ansprechpartner" : "[Funktion ergänzen]" },
+        { name: "[Name ergänzen]", role: "[Funktion ergänzen]" },
+      ],
+    },
+  };
+
+  const gallerySection: Section = {
+    component_type: "gallery",
+    variant: "grid",
+    content: {
+      headline: copy?.gallery_headline ?? "Einblicke in unsere Arbeit",
+      intro: copy?.gallery_intro ?? null,
+      items: serviceTitles.slice(0, 3).map((title, i) => ({
+        image: placeholderImage(`gallery-${i + 1}`, `Beispielbild: ${title}`),
+        caption: `Beispiel: ${title}`,
+      })),
+    },
+  };
+
+  const pricingItems =
+    copy && copy.pricing_items.length > 0
+      ? copy.pricing_items.map((p) => ({ title: p.title, price: "[Preis ergänzen]", description: p.description, features: p.features.length ? p.features : undefined }))
+      : home.services_items.slice(0, 3).map((i) => ({ title: i.title, price: "[Preis ergänzen]", description: i.description }));
+  const pricingSection: Section = {
+    component_type: "pricing",
+    variant: "cards",
+    content: {
+      headline: copy?.pricing_headline ?? "Preise und Pakete",
+      intro: copy?.pricing_intro ?? null,
+      note: copy?.pricing_note ?? "Alle Angaben unverbindlich. Den genauen Preis nennen wir nach Rücksprache.",
+      items: pricingItems,
+    },
+  };
+
+  const hoursSection: Section = {
+    component_type: "hours",
+    variant: "standard",
+    content: {
+      headline: copy?.hours_headline ?? "Erreichbarkeit",
+      intro: copy?.hours_intro ?? null,
+      hours: copy && copy.opening_hours.length > 0 ? copy.opening_hours : [{ days: "Öffnungszeiten", hours: PLACEHOLDER }],
+      area_headline: "Einsatzgebiet",
+      area_text: copy?.service_area ?? "[Einsatzgebiet ergänzen]",
+    },
+  };
+
+  const bookingSection: Section = {
+    component_type: "booking",
+    variant: "request-form",
+    content: {
+      headline: copy?.booking_headline ?? "Termin anfragen",
+      intro: copy?.booking_intro ?? "Nennen Sie uns Ihren Wunschtermin. Wir bestätigen ihn persönlich.",
+      note: null,
+    },
+  };
+
   const homeSections: Section[] = [
     navbar,
     heroSection,
@@ -139,6 +211,8 @@ export function composePages(input: ComposeInput): PageDraft[] {
         stats,
       },
     },
+    ...(has("pricing_team") ? [teamSection] : []),
+    ...(has("gallery") ? [gallerySection] : []),
     { component_type: "faq", variant: "accordion", content: { headline: home.faq_headline, items: home.faq_items } },
     footer,
   ];
@@ -150,6 +224,7 @@ export function composePages(input: ComposeInput): PageDraft[] {
       variant: v.services,
       content: { headline: leistungen.headline, intro: leistungen.intro, items: leistungen.items },
     },
+    ...(has("pricing_team") ? [pricingSection] : []),
     footer,
   ];
 
@@ -167,7 +242,9 @@ export function composePages(input: ComposeInput): PageDraft[] {
         form_note: "Die Daten aus dem Formular verwenden wir nur, um Ihre Anfrage zu beantworten.",
       },
     },
-    ...(address
+    ...(has("booking_request") ? [bookingSection] : []),
+    ...(has("hours_area") ? [hoursSection] : []),
+    ...(has("map") && address
       ? [
           {
             component_type: "location",
@@ -218,6 +295,6 @@ export function composePages(input: ComposeInput): PageDraft[] {
     { slug: "/leistungen", page_type: "leistungen", title: "Leistungen", sections: leistungenSections, seo: seoFor("/leistungen", "Leistungen") },
     { slug: "/kontakt", page_type: "kontakt", title: "Kontakt", sections: kontaktSections, seo: seoFor("/kontakt", "Kontakt") },
     { slug: "/impressum", page_type: "impressum", title: "Impressum", sections: [navbar, impressumSection(legalFacts), footer], seo: legalSeo("Impressum") },
-    { slug: "/datenschutz", page_type: "datenschutz", title: "Datenschutz", sections: [navbar, datenschutzSection(legalFacts), footer], seo: legalSeo("Datenschutz") },
+    { slug: "/datenschutz", page_type: "datenschutz", title: "Datenschutz", sections: [navbar, datenschutzSection(legalFacts, { map: has("map"), booking: has("booking_request") }), footer], seo: legalSeo("Datenschutz") },
   ];
 }

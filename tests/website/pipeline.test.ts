@@ -13,7 +13,7 @@ const fullState: RunState = { plan, home, leistungen, seo };
 
 describe("Schrittfolge", () => {
   it("läuft von plan bis assemble und endet", () => {
-    expect(STEPS).toEqual(["plan", "copy_home", "copy_leistungen", "seo", "assemble"]);
+    expect(STEPS).toEqual(["plan", "copy_home", "copy_leistungen", "copy_features", "seo", "assemble"]);
     expect(nextStep("plan")).toBe("copy_home");
     expect(nextStep("assemble")).toBeNull();
   });
@@ -163,7 +163,7 @@ describe("Qualitätsprüfung", () => {
   });
 
   it("blockiert fehlende Pflichtseiten, ungültige Abschnitte und schlechten Kontrast", () => {
-    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo });
+    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo, features: ["map"], featureCopy: null });
     const broken = checkQuality({
       lead,
       facts,
@@ -178,7 +178,7 @@ describe("Qualitätsprüfung", () => {
   });
 
   it("erkennt manipulierte Kontaktdaten im Footer", () => {
-    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo });
+    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo, features: ["map"], featureCopy: null });
     const tampered = pages.map((p) => ({
       ...p,
       sections: p.sections.map((s) => (s.component_type === "footer" ? { ...s, content: { ...s.content, phone: "0900 123" } } : s)),

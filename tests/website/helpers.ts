@@ -1,6 +1,6 @@
 import type { CompanyProfileRow } from "@/lib/intelligence/types";
 import type { Lead } from "@/lib/leads/types";
-import type { HomeCopy, LeistungenCopy, Plan, SeoOutput } from "@/lib/website/prompts";
+import type { FeatureCopy, HomeCopy, LeistungenCopy, Plan, SeoOutput } from "@/lib/website/prompts";
 
 export const lead: Lead = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -84,4 +84,21 @@ export const seo: SeoOutput = {
     { slug: "/leistungen", title: "Leistungen — Elektro Weber", meta_description: "Unsere Leistungen im Überblick." },
     { slug: "/kontakt", title: "Kontakt — Elektro Weber", meta_description: "So erreichen Sie Elektro Weber in Lahr." },
   ],
+};
+
+export const featureCopy: FeatureCopy = {
+  hours_headline: "Erreichbarkeit",
+  hours_intro: null,
+  opening_hours: [],
+  service_area: null,
+  gallery_headline: "Einblicke in unsere Arbeit",
+  gallery_intro: "Beispiele aus unserem Alltag.",
+  pricing_headline: "Preise und Pakete",
+  pricing_intro: "Transparent und fair.",
+  pricing_note: "Preise nennen wir nach Rücksprache.",
+  pricing_items: [{ title: "Kleinauftrag", description: "Einzelne Arbeiten nach Absprache.", features: ["Beratung"] }],
+  team_headline: "Ihre Ansprechpartner",
+  team_intro: null,
+  booking_headline: "Termin anfragen",
+  booking_intro: "Wir bestätigen Ihren Wunschtermin persönlich.",
 };

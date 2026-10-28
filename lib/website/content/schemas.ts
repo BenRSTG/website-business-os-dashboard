@@ -160,6 +160,76 @@ const legal = z.object({
   }),
 });
 
+// Feature-Bausteine (Etappe 4C). Angaben, die nicht bekannt sind (Preise, Zeiten, Namen), stehen als "[… ergänzen]" im Text:
+// die Qualitätsprüfung im Dashboard listet sie, die Veröffentlichung bleibt gesperrt, solange welche übrig sind.
+const hours = z.object({
+  ...sectionBase,
+  component_type: z.literal("hours"),
+  variant: z.enum(["standard"]),
+  content: z.object({
+    headline: text(100),
+    intro: optionalText(300),
+    hours: z.array(z.object({ days: text(40), hours: text(60) })).max(8),
+    area_headline: optionalText(80),
+    area_text: optionalText(400),
+  }),
+});
+
+const gallery = z.object({
+  ...sectionBase,
+  component_type: z.literal("gallery"),
+  variant: z.enum(["grid"]),
+  content: z.object({
+    headline: text(100),
+    intro: optionalText(300),
+    items: z.array(z.object({ image: imageSchema, caption: text(120) })).min(3).max(9),
+  }),
+});
+
+const pricing = z.object({
+  ...sectionBase,
+  component_type: z.literal("pricing"),
+  variant: z.enum(["cards"]),
+  content: z.object({
+    headline: text(100),
+    intro: optionalText(300),
+    note: optionalText(300),
+    items: z
+      .array(
+        z.object({
+          title: text(80),
+          price: text(40),
+          description: text(300),
+          features: z.array(text(80)).max(5).optional(),
+        }),
+      )
+      .min(1)
+      .max(4),
+  }),
+});
+
+const team = z.object({
+  ...sectionBase,
+  component_type: z.literal("team"),
+  variant: z.enum(["cards"]),
+  content: z.object({
+    headline: text(100),
+    intro: optionalText(300),
+    members: z.array(z.object({ name: text(60), role: text(80), image: imageSchema.nullish() })).min(1).max(6),
+  }),
+});
+
+const booking = z.object({
+  ...sectionBase,
+  component_type: z.literal("booking"),
+  variant: z.enum(["request-form"]),
+  content: z.object({
+    headline: text(100),
+    intro: optionalText(300),
+    note: optionalText(300),
+  }),
+});
+
 export const sectionSchema = z.discriminatedUnion("component_type", [
   navbar,
   hero,
@@ -171,6 +241,11 @@ export const sectionSchema = z.discriminatedUnion("component_type", [
   location,
   footer,
   legal,
+  hours,
+  gallery,
+  pricing,
+  team,
+  booking,
 ]);
 export type Section = z.infer<typeof sectionSchema>;
 export type SectionType = Section["component_type"];

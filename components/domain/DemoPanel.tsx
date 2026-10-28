@@ -5,6 +5,7 @@ import { DemoRunner } from "@/components/domain/DemoRunner";
 import { formatDate, formatDateTime } from "@/lib/datetime";
 import type { CompanyProfileRow } from "@/lib/intelligence/types";
 import { isExpired, isResumable, previewUrl, type DemoSite, type GenerationRun } from "@/lib/website/queries";
+import { normalizeFeatures } from "@/lib/website/features";
 import { type StepId } from "@/lib/website/steps";
 
 const STYLE_LABELS = { modern: "Modern", traditional: "Klassisch", premium: "Hochwertig" } as const;
@@ -146,6 +147,7 @@ export function DemoPanel({
               leadId={leadId}
               label={site ? "Demo neu erzeugen" : "Website-Demo erstellen"}
               variant={site ? "outline" : "default"}
+              defaultFeatures={site ? normalizeFeatures(site.features) : undefined}
               confirmText="Die bisherige Demo wird durch die neue ersetzt, sobald diese fertig ist, und ihr Link funktioniert danach nicht mehr. Fortfahren?"
             />
           </>

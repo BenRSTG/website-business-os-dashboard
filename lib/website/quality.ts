@@ -117,9 +117,19 @@ export function checkQuality(input: {
   for (const claim of findUnbackedClaims(copyText.join(" \n "), lead, facts)) {
     warnings.push(`Im Text: ${claim}. Bitte vor Zeigen prüfen oder streichen.`);
   }
-  copyText.forEach((t) => {
-    if (/\[[^\]]+\]/.test(t)) placeholders.push(`Offener Platzhalter im Text: ${t.slice(0, 80)}`);
-  });
+  // Markierte Platzhalter in den Seiten (Preise, Zeiten, Namen …): jeder einzelne wird gelistet, damit nichts ungeprüft live geht.
+  const seen = new Set<string>();
+  for (const page of pages.filter((p) => p.page_type !== "impressum" && p.page_type !== "datenschutz")) {
+    for (const text of collectStrings(page.sections)) {
+      for (const match of text.match(/\[[^\]]+\]/g) ?? []) {
+        const line = `${page.title}: ${match}`;
+        if (!seen.has(line)) {
+          seen.add(line);
+          placeholders.push(line);
+        }
+      }
+    }
+  }
 
   for (const page of pages.filter((p) => p.page_type === "impressum" || p.page_type === "datenschutz")) {
     for (const r of parseSections(page.sections)) {

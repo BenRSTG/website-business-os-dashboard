@@ -33,7 +33,7 @@ export function impressumSection(f: LegalFacts): Section {
   };
 }
 
-export function datenschutzSection(f: LegalFacts): Section {
+export function datenschutzSection(f: LegalFacts, options: { map: boolean; booking: boolean } = { map: true, booking: false }): Section {
   return {
     component_type: "legal",
     variant: "standard",
@@ -48,7 +48,8 @@ export function datenschutzSection(f: LegalFacts): Section {
       sections: [
         { heading: "Hosting", placeholder: "[Angaben zum Hosting-Anbieter und zu Server-Logdateien ergänzen]" },
         { heading: "Kontaktaufnahme", placeholder: "[Angaben zur Verarbeitung von Anfragen per Telefon, E-Mail und Formular ergänzen]" },
-        { heading: "Karten und externe Inhalte", placeholder: "[Angaben zu Google Maps und der Einwilligung ergänzen]" },
+        ...(options.map ? [{ heading: "Karten und externe Inhalte", placeholder: "[Angaben zu Google Maps und der Einwilligung ergänzen]" }] : []),
+        ...(options.booking ? [{ heading: "Terminanfragen", placeholder: "[Angaben zur Verarbeitung von Terminanfragen (Name, Kontaktdaten, Wunschtermin) ergänzen]" }] : []),
         { heading: "Ihre Rechte", placeholder: "[Standardtext zu Auskunft, Berichtigung, Löschung und Beschwerde ergänzen]" },
       ],
     },
