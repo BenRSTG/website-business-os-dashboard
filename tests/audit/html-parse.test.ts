@@ -109,3 +109,52 @@ describe("Telefonnummern", () => {
     expect(phone(t)).toBe(false);
   });
 });
+
+describe("Telefonnummern in üblichen deutschen Schreibweisen", () => {
+  const phone = (text: string) => parseWebsite(`<html><body><p>${text}</p></body></html>`, "https://x.de").phoneDetected;
+  it.each([
+    "Tel.: (0531) 123456",
+    "Tel: (0531) 12 34 56",
+    "Telefon 0531 / 12 34 56",
+    "Fon: 0531-123456",
+    "Mobil +49 (0) 171 1234567",
+    "(07821) 555 0101",
+  ])("erkennt %s", (text) => expect(phone(text)).toBe(true));
+
+  it.each([
+    "Stand: 28.10.2026",
+    "Stand: 2026-10-28",
+    "Gegründet 1930",
+    "PLZ 38100 Braunschweig",
+    "Preis 12,50 EUR",
+    "Seite 3 von 12",
+  ])("hält %s nicht für eine Nummer", (text) => expect(phone(text)).toBe(false));
+});
+
+describe("Navigation ohne <nav>-Element", () => {
+  const nav = (body: string) => parseWebsite(`<html><body>${body}</body></html>`, "https://x.de").navigationDetected;
+
+  it("erkennt eine Linkliste in einem Container (älteres Muster)", () => {
+    expect(
+      nav(`<div id="navigation"><ul class="tabbed"><li><a href="index.html">Startseite</a></li>
+      <li><a href="a.html">Leistungen</a></li><li><a href="b.html">Preise</a></li><li><a href="c.html">Kontakt</a></li></ul></div>`),
+    ).toBe(true);
+  });
+
+  it("erkennt Container mit menu im Namen", () => {
+    expect(nav(`<div class="main-menu"><a href="/a">A</a> <a href="/b">B</a> <a href="/c">C</a></div>`)).toBe(true);
+  });
+
+  it("erkennt das semantische <nav>", () => {
+    expect(nav(`<nav><a href="/a">A</a><a href="/b">B</a></nav>`)).toBe(true);
+  });
+
+  it("hält ein paar Links im Fließtext nicht für eine Navigation", () => {
+    expect(nav(`<p>Lesen Sie <a href="/a">hier</a> oder <a href="/b">dort</a> mehr.</p>`)).toBe(false);
+  });
+
+  it("hält eine Liste langer Verweistexte nicht für eine Navigation", () => {
+    const long = "Dies ist ein ausführlicher Beitragstitel mit viel Text";
+    expect(nav(`<ul>${[1, 2, 3, 4].map((i) => `<li><a href="/${i}">${long} ${i}</a></li>`).join("")}</ul>`)).toBe(false);
+  });
+});

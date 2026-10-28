@@ -18,7 +18,9 @@ export interface HtmlChecks {
   textExcerpt: string;
 }
 
-const PHONE_PATTERN = /(?:\+49|0049|0)\s?[1-9]\d{1,4}\s?[/.-]?\s?\d{3,}/;
+// Vorwahl (auch in Klammern: "(0531) 31 25 21"), danach ein bis vier Ziffernblöcke. Das Lookbehind verhindert,
+// dass mitten in einer Zahl begonnen wird (z. B. "024-10-28" aus dem Datum "2024-10-28").
+const PHONE_PATTERN = /(?<!\d)(?:(?:\+49|0049)\s*|0\s?)[1-9]\d{1,4}(?:\s*[/.-]?\s*\d{2,}){1,4}(?!\d)/g;
 const SOCIAL_HOSTS = [
   "facebook.com",
   "instagram.com",
@@ -31,6 +33,34 @@ const SOCIAL_HOSTS = [
   "x.com",
 ];
 const EXCERPT_LIMIT = 6000;
+
+/** Telefonnummer im Text: Klammern um die Vorwahl entfernen, dann nach Nummernmustern mit 7 bis 15 Ziffern suchen. */
+export function containsPhoneNumber(text: string): boolean {
+  const normalized = text.replace(/\(0\)/g, " ").replace(/[()]/g, " ");
+  for (const match of normalized.matchAll(PHONE_PATTERN)) {
+    const digits = match[0].replace(/\D/g, "").length;
+    if (digits >= 7 && digits <= 15) return true;
+  }
+  return false;
+}
+
+// Navigation: das semantische <nav>/<header>, ein Container mit "nav"/"menu" im Namen oder eine Liste kurzer Links.
+// Viele ältere Seiten bauen ihr Menü als <div id="navigation"><ul>…, ohne <nav>.
+function detectNavigation($: cheerio.CheerioAPI): boolean {
+  if ($("nav a").length >= 2 || $("header a").length >= 3) return true;
+
+  const named = $("[id], [class]")
+    .toArray()
+    .some((el) => /(^|[\s_-])(nav|navigation|menu|menue)([\s_-]|$)/i.test(`${$(el).attr("id") ?? ""} ${$(el).attr("class") ?? ""}`) && $(el).find("a[href]").length >= 3);
+  if (named) return true;
+
+  return $("ul, ol")
+    .toArray()
+    .some((list) => {
+      const links = $(list).children("li").children("a[href]").toArray();
+      return links.length >= 4 && links.every((a) => $(a).text().trim().length <= 30);
+    });
+}
 
 // Genau eine H1 und keine übersprungenen Ebenen beim Absteigen (H1 → H3 ist ein Sprung).
 function headingStructureOk(levels: number[]): boolean {
@@ -75,7 +105,7 @@ export function parseWebsite(html: string, finalUrl: string): HtmlChecks {
     .toArray()
     .some((el) => /google\.[a-z.]+\/maps|maps\.google|openstreetmap\.org|maps\.app\.goo\.gl/i.test($(el).attr("src") ?? ""));
 
-  const navigationDetected = $("nav a").length >= 2 || $("header a").length >= 3;
+  const navigationDetected = detectNavigation($);
 
   const socialHosts = new Set<string>();
   $("a[href]").each((_, el) => {
@@ -94,7 +124,7 @@ export function parseWebsite(html: string, finalUrl: string): HtmlChecks {
       metaDescription !== null && metaDescription.length >= 50 && metaDescription.length <= 170,
     headingStructureOk: headingStructureOk(levels),
     headings,
-    phoneDetected: phoneLinkPresent || PHONE_PATTERN.test(text),
+    phoneDetected: phoneLinkPresent || containsPhoneNumber(text),
     phoneLinkPresent,
     contactFormDetected,
     mapsEmbedDetected,

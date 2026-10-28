@@ -14,7 +14,19 @@ describe("parsePageSpeedResponse", () => {
     expect(result.mobileScore).toBe(50);
   });
 
-  it("nutzt nur vorhandene Mobile-Audits (neuere Lighthouse-Versionen)", () => {
+  it("liest die Prüfpunkte von Lighthouse 13 (viewport-insight, target-size) und ignoriert nicht anwendbare", () => {
+    const result = parsePageSpeedResponse(
+      lighthouse({
+        "viewport-insight": { score: 0.5 },
+        "target-size": { score: 1 },
+        "meta-viewport": { score: null },
+        "image-size-responsive": { score: 0 },
+      }),
+    );
+    expect(result.mobileScore).toBe(75);
+  });
+
+  it("nutzt nur vorhandene Mobile-Audits (ältere Lighthouse-Versionen)", () => {
     expect(parsePageSpeedResponse(lighthouse({ viewport: { score: 1 } })).mobileScore).toBe(100);
   });
 
@@ -53,6 +65,8 @@ describe("fetchPageSpeed", () => {
     }) as unknown as typeof fetch;
     await fetchPageSpeed("https://example.com", "KEY123", spy);
     expect(requested).toContain("strategy=mobile");
+    expect(requested).toContain("category=performance");
+    expect(requested).toContain("category=accessibility");
     expect(requested).toContain("url=https%3A%2F%2Fexample.com");
     expect(requested).toContain("key=KEY123");
   });

@@ -10,7 +10,9 @@ export interface PageSpeedResult {
 }
 
 const MAX_SCREENSHOT_CHARS = 600_000;
-const MOBILE_AUDITS = ["viewport", "font-size", "tap-targets"] as const;
+// Lighthouse 13 hat "viewport", "font-size" und "tap-targets" ersetzt: heute liefert "viewport-insight" (Performance-Kategorie)
+// und "target-size" (Kategorie accessibility) die Mobile-Signale. Die alten IDs bleiben für ältere Lighthouse-Versionen.
+const MOBILE_AUDITS = ["viewport-insight", "target-size", "viewport", "font-size", "tap-targets"] as const;
 
 const responseSchema = z.object({
   lighthouseResult: z
@@ -68,6 +70,7 @@ export async function fetchPageSpeed(
   endpoint.searchParams.set("url", url);
   endpoint.searchParams.set("strategy", "mobile");
   endpoint.searchParams.append("category", "performance");
+  endpoint.searchParams.append("category", "accessibility");
   if (apiKey) endpoint.searchParams.set("key", apiKey);
 
   let response: Response;

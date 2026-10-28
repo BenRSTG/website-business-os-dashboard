@@ -3,6 +3,7 @@
 import { requireUser, type Supabase } from "@/lib/auth";
 import { fetchPageSpeed, PageSpeedError, type PageSpeedResult } from "@/lib/audit/pagespeed";
 import { parseWebsite, type HtmlChecks } from "@/lib/audit/html-parse";
+import { combineMobileScore } from "@/lib/audit/mobile";
 import { AuditFetchError, safeFetchHtml } from "@/lib/audit/safe-fetch";
 import { runAiStep } from "@/lib/ai/run-step";
 import {
@@ -221,7 +222,7 @@ async function analyzeWebsite(
     const measured = {
       final_url: finalUrl,
       has_ssl: checks?.hasSsl ?? null,
-      pagespeed_mobile_score: pageSpeed?.mobileScore ?? null,
+      pagespeed_mobile_score: combineMobileScore([pageSpeed?.mobileScore, checks ? (checks.viewportPresent ? 100 : 0) : null]),
       pagespeed_performance_score: pageSpeed?.performanceScore ?? null,
       meta_title_ok: checks?.metaTitleOk ?? null,
       meta_description_ok: checks?.metaDescriptionOk ?? null,
