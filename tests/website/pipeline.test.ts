@@ -214,3 +214,28 @@ describe("Ausgabeformate der KI", () => {
     expect(z.object({}).safeParse({}).success).toBe(true);
   });
 });
+
+describe("SEO-Texte kürzen", () => {
+  it("fitText kürzt an Wortgrenzen und lässt Kurzes unverändert", async () => {
+    const { fitText } = await import("@/lib/website/prompts");
+    expect(fitText("Kurz", 60)).toBe("Kurz");
+    const long = "Schleiferei Brotrück — Messer- und Scherenschleiferei in Braunschweig für Haushalt und Gastronomie";
+    const out = fitText(long, 60);
+    expect(out.length).toBeLessThanOrEqual(60);
+    expect(out.endsWith("…")).toBe(true);
+    expect(out).not.toMatch(/\s…$/);
+    expect(fitText("a".repeat(200), 155).length).toBe(155);
+  });
+
+  it("zu lange SEO-Texte der KI führen nicht mehr zum Abbruch, sondern werden gekürzt", () => {
+    const longSeo = {
+      pages: seo.pages.map((p) => ({ ...p, title: "T".repeat(5) + " " + "wort ".repeat(30), meta_description: "Satz. ".repeat(60) })),
+    };
+    const r = assemble(lead, profile, { ...fullState, seo: longSeo });
+    for (const p of r.pages.slice(0, 3)) {
+      expect((p.seo.title as string).length).toBeLessThanOrEqual(60);
+      expect((p.seo.meta_description as string).length).toBeLessThanOrEqual(155);
+    }
+    expect(r.report.errors).toEqual([]);
+  });
+});

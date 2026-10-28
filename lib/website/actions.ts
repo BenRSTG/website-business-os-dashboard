@@ -43,7 +43,9 @@ function userMessage(error: unknown): string {
   ) {
     return error.message;
   }
-  if (error instanceof AiValidationError) return "Die KI lieferte zweimal keine verwertbare Antwort. Bitte den Schritt erneut versuchen.";
+  if (error instanceof AiValidationError) {
+    return `Die KI lieferte zweimal keine verwertbare Antwort (${error.message}). Bitte den Schritt erneut versuchen.`;
+  }
   console.error("Unerwarteter Fehler bei der Demo-Erstellung:", error);
   return "Unerwarteter Fehler. Bitte erneut versuchen.";
 }
@@ -85,10 +87,10 @@ export async function startDemoRun(leadId: string): Promise<DemoStepResult> {
   }
 }
 
-async function failRun(supabase: Supabase, runId: string, message: string, terminal: boolean, report?: unknown) {
+async function failRun(supabase: Supabase, runId: string, message: string, terminal: boolean, report?: unknown, costEur?: number) {
   await supabase
     .from("site_generation_runs")
-    .update({ error_message: message, ...(terminal ? { status: "FAILED" } : {}), ...(report ? { quality_report: report } : {}) })
+    .update({ error_message: message, ...(terminal ? { status: "FAILED" } : {}), ...(report ? { quality_report: report } : {}), ...(costEur !== undefined ? { cost_total_eur: costEur } : {}) })
     .eq("id", runId);
 }
 
@@ -113,9 +115,9 @@ export async function advanceDemoRun(runId: string, expectedStep: string): Promi
   const profile = lead ? await getLatestProfile(lead.id) : null;
   if (!lead || !profile) return fail("Lead oder Unternehmensprofil nicht mehr vorhanden.");
 
+  let spent = Number(run.cost_total_eur);
   try {
     const config = getAiConfig();
-    let spent = Number(run.cost_total_eur);
     let state = run.state as RunState;
 
     if (step === "assemble") {
@@ -145,20 +147,25 @@ export async function advanceDemoRun(runId: string, expectedStep: string): Promi
         maxTokens: args.maxTokens,
         usdEurRate: config.usdEurRate,
       });
-      const result = await runAiStep({
-        supabase,
-        userId,
-        step: args.step,
-        entityType: "lead",
-        entityId: lead.id,
-        tier: args.tier,
-        system: args.system,
-        userText: args.userText,
-        schema: args.schema,
-        maxTokens: args.maxTokens,
-      });
-      spent += result.costEur;
-      return { output: result.output, costEur: result.costEur };
+      try {
+        const result = await runAiStep({
+          supabase,
+          userId,
+          step: args.step,
+          entityType: "lead",
+          entityId: lead.id,
+          tier: args.tier,
+          system: args.system,
+          userText: args.userText,
+          schema: args.schema,
+          maxTokens: args.maxTokens,
+        });
+        spent += result.costEur;
+        return { output: result.output, costEur: result.costEur };
+      } catch (error) {
+        spent += Number((error as { costEur?: number }).costEur ?? 0);
+        throw error;
+      }
     };
 
     const out = await executeAiStep(step, { lead, profile, state, runAi });
@@ -173,7 +180,7 @@ export async function advanceDemoRun(runId: string, expectedStep: string): Promi
   } catch (error) {
     const message = userMessage(error);
     // Budget-Überschreitung beendet den Lauf; bei vorübergehenden KI-Fehlern bleibt er fortsetzbar.
-    await failRun(supabase, runId, message, error instanceof AiBudgetError);
+    await failRun(supabase, runId, message, error instanceof AiBudgetError, undefined, spent);
     return fail(message);
   }
 }

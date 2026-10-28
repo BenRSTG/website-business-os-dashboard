@@ -147,6 +147,10 @@ export async function runAiStep<T>(params: RunAiStepParams<T>): Promise<AiStepRe
   });
   if (logError) console.error("audit_log-Eintrag fehlgeschlagen:", logError.message);
 
-  if (!outcome.ok) throw outcome.error;
+  if (!outcome.ok) {
+    // Auch fehlgeschlagene Aufrufe kosten; der Aufrufer (z. B. der Demo-Lauf) summiert sie mit.
+    if (outcome.error instanceof Error) Object.assign(outcome.error, { costEur });
+    throw outcome.error;
+  }
   return { output: outcome.output, model: usedModel, costEur };
 }

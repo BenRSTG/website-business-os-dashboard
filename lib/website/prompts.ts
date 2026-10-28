@@ -15,7 +15,7 @@ export const planSchema = z.object({
   style: z.enum(SITE_STYLES),
   palette_id: z.enum(PALETTE_IDS),
   hero_variant: z.enum(["split", "centered", "image-full"]),
-  reason: text(300),
+  reason: text(600),
 });
 export type Plan = z.infer<typeof planSchema>;
 
@@ -47,11 +47,20 @@ export type LeistungenCopy = z.infer<typeof leistungenCopySchema>;
 
 export const seoOutputSchema = z.object({
   pages: z
-    .array(z.object({ slug: z.enum(["/", "/leistungen", "/kontakt"]), title: text(60), meta_description: text(155) }))
+    .array(z.object({ slug: z.enum(["/", "/leistungen", "/kontakt"]), title: text(120), meta_description: text(300) }))
     .min(3)
     .max(3),
 });
 export type SeoOutput = z.infer<typeof seoOutputSchema>;
+
+/** Kürzt auf höchstens `max` Zeichen an einer Wortgrenze (SEO-Texte: das Modell zählt Zeichen unzuverlässig). */
+export function fitText(value: string, max: number): string {
+  const text = value.trim().replace(/\s+/g, " ");
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > max * 0.6 ? cut.slice(0, space) : cut).replace(/[\s,;:–—-]+$/, "")}…`;
+}
 
 // --- Eingabe -----------------------------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ import { LEAD_INDUSTRY_LABELS } from "@/lib/leads/constants";
 import { telHref } from "./content/links";
 import type { Section } from "./content/schemas";
 import { datenschutzSection, impressumSection, type LegalFacts } from "./legal";
-import type { HomeCopy, LeistungenCopy, Plan, SeoOutput } from "./prompts";
+import { fitText, type HomeCopy, type LeistungenCopy, type Plan, type SeoOutput } from "./prompts";
 import type { SiteStyle } from "./tokens";
 
 export interface PageDraft {
@@ -187,8 +187,8 @@ export function composePages(input: ComposeInput): PageDraft[] {
   const seoFor = (slug: string, fallbackTitle: string) => {
     const generated = input.seo?.pages.find((p) => p.slug === slug);
     return {
-      title: generated?.title ?? `${fallbackTitle} — ${lead.company_name}`.slice(0, 90),
-      meta_description: generated?.meta_description,
+      title: generated ? fitText(generated.title, 60) : `${fallbackTitle} — ${lead.company_name}`.slice(0, 90),
+      meta_description: generated ? fitText(generated.meta_description, 155) : undefined,
     };
   };
 
