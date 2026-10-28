@@ -9,6 +9,9 @@ function describe(entry: ActivityEntry): string {
   if (entry.action_type === "lead.status_changed" && entry.input?.to) {
     return `Status → ${LEAD_STATUS_LABELS[entry.input.to]}: ${name}`;
   }
+  if (entry.action_type === "lead.analyzed") return `Website analysiert: ${name}`;
+  if (entry.action_type === "lead.scored") return `Scores berechnet: ${name}`;
+  if (entry.action_type === "lead.profiled") return `Unternehmensprofil erstellt: ${name}`;
   return name;
 }
 

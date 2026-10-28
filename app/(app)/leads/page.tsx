@@ -5,6 +5,7 @@ import { LeadFilters } from "@/components/domain/LeadFilters";
 import { LeadTable } from "@/components/domain/LeadTable";
 import { PageHeader } from "@/components/domain/PageHeader";
 import { PipelineBoard } from "@/components/domain/PipelineBoard";
+import { getScoreSummaries, getScoringConfig } from "@/lib/intelligence/queries";
 import { listLeads, parseLeadFilters } from "@/lib/leads/queries";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +19,11 @@ export default async function LeadsPage({ searchParams }: PageProps<"/leads">) {
   const view = params.view === "pipeline" ? "pipeline" : "list";
   const filters = parseLeadFilters(params);
   // Im Pipeline-Board ist der Status die Spalte — ein Status-Filter ergäbe dort keinen Sinn.
-  const leads = await listLeads(view === "pipeline" ? { ...filters, status: undefined } : filters);
+  const [leads, scores, config] = await Promise.all([
+    listLeads(view === "pipeline" ? { ...filters, status: undefined } : filters),
+    getScoreSummaries(),
+    getScoringConfig(),
+  ]);
 
   const query = new URLSearchParams();
   if (filters.industry) query.set("industry", filters.industry);
@@ -64,7 +69,11 @@ export default async function LeadsPage({ searchParams }: PageProps<"/leads">) {
       </div>
 
       <LeadFilters view={view} filters={filters} />
-      {view === "pipeline" ? <PipelineBoard leads={leads} /> : <LeadTable leads={leads} />}
+      {view === "pipeline" ? (
+        <PipelineBoard leads={leads} scores={scores} config={config} />
+      ) : (
+        <LeadTable leads={leads} scores={scores} config={config} />
+      )}
     </>
   );
 }

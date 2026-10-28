@@ -1,11 +1,22 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { ScoreBadge } from "@/components/domain/ScoreBadge";
 import { StatusBadge } from "@/components/domain/StatusBadge";
+import type { ScoreSummary } from "@/lib/intelligence/types";
+import type { ScoringConfig } from "@/lib/scoring/config";
 import { formatRelativeDay } from "@/lib/datetime";
 import { LEAD_INDUSTRY_LABELS } from "@/lib/leads/constants";
 import type { Lead } from "@/lib/leads/types";
 
-export function LeadTable({ leads }: { leads: Lead[] }) {
+export function LeadTable({
+  leads,
+  scores,
+  config,
+}: {
+  leads: Lead[];
+  scores: Map<string, ScoreSummary>;
+  config: ScoringConfig;
+}) {
   if (leads.length === 0) {
     return (
       <Card className="items-center px-4 py-12 text-center">
@@ -46,8 +57,12 @@ export function LeadTable({ leads }: { leads: Lead[] }) {
               <td className="px-4 py-3">
                 <StatusBadge status={lead.status} />
               </td>
-              <td className="px-4 py-3 font-mono text-muted-foreground" title="Folgt in Milestone 3">
-                —
+              <td className="px-4 py-3">
+                <ScoreBadge
+                  score={scores.get(lead.id)?.opportunity}
+                  reachable={scores.get(lead.id)?.reachable}
+                  config={config}
+                />
               </td>
               <td className="px-4 py-3">{formatRelativeDay(lead.next_contact_at)}</td>
             </tr>

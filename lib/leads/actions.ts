@@ -1,9 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { requireUser, type Supabase } from "@/lib/auth";
+import { logLeadEvent, refreshLeadViews } from "./events";
 import { berlinDateStringAt, berlinDayAt } from "@/lib/datetime";
 import type { LeadStatus } from "./constants";
 import {
@@ -22,35 +22,6 @@ export type ActionState = {
 
 const initialError = (message: string): ActionState => ({ error: message });
 
-async function requireUser() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  if (!data.user) redirect("/login");
-  return { supabase, userId: data.user.id };
-}
-
-type Supabase = Awaited<ReturnType<typeof createClient>>;
-
-// Lead-Ereignisse speist den Aktivitäts-Feed. Ein Fehler hier darf die eigentliche Aktion nicht kippen.
-async function logLeadEvent(
-  supabase: Supabase,
-  userId: string,
-  actionType: string,
-  leadId: string,
-  input: Record<string, unknown>,
-) {
-  const { error } = await supabase.from("audit_log").insert({
-    actor: "USER",
-    user_id: userId,
-    action_type: actionType,
-    entity_type: "lead",
-    entity_id: leadId,
-    input,
-  });
-  if (error) console.error("audit_log-Eintrag fehlgeschlagen:", error.message);
-}
-
-
 // "Nächster Kontakt" am Lead ist immer der früheste offene Termin — wird nach jeder Änderung neu abgeleitet.
 async function syncNextContact(supabase: Supabase, leadId: string | null) {
   if (!leadId) return;
@@ -67,11 +38,6 @@ async function syncNextContact(supabase: Supabase, leadId: string | null) {
     .from("leads")
     .update({ next_contact_at: data?.due_at ?? null })
     .eq("id", leadId);
-}
-
-function refreshLeadViews() {
-  revalidatePath("/dashboard");
-  revalidatePath("/leads", "layout");
 }
 
 function formToObject(formData: FormData) {

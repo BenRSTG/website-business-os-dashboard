@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { AuditPanel } from "@/components/domain/AuditPanel";
+import { ProfilePanel } from "@/components/domain/ProfilePanel";
 import { SalesActions } from "@/components/domain/SalesActions";
+import { ScoreBadge } from "@/components/domain/ScoreBadge";
 import { StatusBadge } from "@/components/domain/StatusBadge";
 import { StatusSelect } from "@/components/domain/StatusSelect";
 import { formatDate, formatDateTime } from "@/lib/datetime";
@@ -15,6 +18,12 @@ import {
   nextActionFor,
 } from "@/lib/leads/constants";
 import { completeTask } from "@/lib/leads/actions";
+import {
+  getLatestAudit,
+  getLatestProfile,
+  getLatestScores,
+  getScoringConfig,
+} from "@/lib/intelligence/queries";
 import { getLead, getLeadTasks } from "@/lib/leads/queries";
 import type { Lead } from "@/lib/leads/types";
 import { cn } from "@/lib/utils";
@@ -125,6 +134,9 @@ function NotYetRun({
   );
 }
 
+// Die Website-Analyse (PageSpeed + KI) kann länger als die Standardlaufzeit brauchen.
+export const maxDuration = 120;
+
 export default async function LeadDetailPage({
   params,
   searchParams,
@@ -139,7 +151,13 @@ export default async function LeadDetailPage({
     ? (requestedTab as TabValue)
     : "uebersicht";
 
-  const tasks = await getLeadTasks(lead.id);
+  const [tasks, scores, config, audit, profile] = await Promise.all([
+    getLeadTasks(lead.id),
+    getLatestScores(lead.id),
+    getScoringConfig(),
+    tab === "audit" ? getLatestAudit(lead.id) : Promise.resolve(null),
+    tab === "profil" ? getLatestProfile(lead.id) : Promise.resolve(null),
+  ]);
   const openTasks = tasks
     .filter((t) => t.status === "OPEN")
     .sort((a, b) => (a.due_at ?? "").localeCompare(b.due_at ?? ""));
@@ -160,6 +178,14 @@ export default async function LeadDetailPage({
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-xl font-bold">{lead.company_name}</h1>
             <StatusBadge status={lead.status} />
+            {scores ? (
+              <ScoreBadge
+                score={scores.sales_opportunity_score}
+                reachable={scores.reachable}
+                config={config}
+                showLabel
+              />
+            ) : null}
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             {LEAD_INDUSTRY_LABELS[lead.industry]}
@@ -195,22 +221,8 @@ export default async function LeadDetailPage({
           </nav>
 
           {tab === "uebersicht" ? <Overview lead={lead} /> : null}
-          {tab === "audit" ? (
-            <NotYetRun
-              title="Noch kein Audit durchgeführt"
-              hint="Das Audit prüft die bestehende Website des Leads und berechnet daraus die Scores."
-              buttonLabel="Website analysieren"
-              milestone="Milestone 3"
-            />
-          ) : null}
-          {tab === "profil" ? (
-            <NotYetRun
-              title="Noch kein Unternehmensprofil"
-              hint="Das Profil fasst Leistungen und Alleinstellungsmerkmale mit Quellenangabe zusammen."
-              buttonLabel="Unternehmen analysieren"
-              milestone="Milestone 3"
-            />
-          ) : null}
+          {tab === "audit" ? <AuditPanel lead={lead} audit={audit} scores={scores} /> : null}
+          {tab === "profil" ? <ProfilePanel leadId={lead.id} profile={profile} /> : null}
           {tab === "demos" ? (
             <NotYetRun
               title="Noch keine Demo erstellt"

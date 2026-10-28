@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { ScoreBadge } from "@/components/domain/ScoreBadge";
 import { StatusSelect } from "@/components/domain/StatusSelect";
+import type { ScoreSummary } from "@/lib/intelligence/types";
+import type { ScoringConfig } from "@/lib/scoring/config";
 import {
   LEAD_INDUSTRY_LABELS,
   LEAD_STATUS_LABELS,
@@ -8,7 +11,15 @@ import {
 } from "@/lib/leads/constants";
 import type { Lead } from "@/lib/leads/types";
 
-export function PipelineBoard({ leads }: { leads: Lead[] }) {
+export function PipelineBoard({
+  leads,
+  scores,
+  config,
+}: {
+  leads: Lead[];
+  scores: Map<string, ScoreSummary>;
+  config: ScoringConfig;
+}) {
   return (
     <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-3">
       {LEAD_STATUS_VALUES.map((status) => {
@@ -39,6 +50,15 @@ export function PipelineBoard({ leads }: { leads: Lead[] }) {
                     {LEAD_INDUSTRY_LABELS[lead.industry]}
                     {lead.address_city ? ` · ${lead.address_city}` : ""}
                   </p>
+                  {scores.has(lead.id) ? (
+                    <div className="mt-2">
+                      <ScoreBadge
+                        score={scores.get(lead.id)?.opportunity}
+                        reachable={scores.get(lead.id)?.reachable}
+                        config={config}
+                      />
+                    </div>
+                  ) : null}
                   {nextActionFor(lead.status) ? (
                     <p className="mt-2 text-xs">
                       <span className="text-muted-foreground">Nächste Aktion: </span>
