@@ -26,7 +26,9 @@ function describeApiError(error: unknown): AiProviderError {
   if (error instanceof Anthropic.APIError) {
     return new AiProviderError(`Die KI antwortet mit einem Fehler (${error.status ?? "unbekannt"}).`);
   }
-  return new AiProviderError("Die KI konnte nicht erreicht werden.");
+  return new AiProviderError(
+    `Die KI konnte nicht erreicht werden${error instanceof Error ? ` (${error.name})` : ""}.`,
+  );
 }
 
 export function createAnthropicProvider(apiKey: string): AiProvider {
@@ -44,9 +46,11 @@ export function createAnthropicProvider(apiKey: string): AiProvider {
         { type: "text", text: params.userText },
       ];
 
+      // Bewusst create statt parse: Das SDK wirft bei einer Antwort, die das Zod-Schema verletzt (z. B. zu langer Text),
+      // eine Ausnahme ohne Token-Angaben. So bleiben Kosten sichtbar und der Korrektur-Versuch (run-step.ts) greift.
       let response;
       try {
-        response = await client.beta.messages.parse({
+        response = await client.beta.messages.create({
           model: params.model,
           max_tokens: params.maxTokens,
           // Eine abgelehnte Anfrage läuft serverseitig auf dem empfohlenen Ausweichmodell erneut.
@@ -58,6 +62,7 @@ export function createAnthropicProvider(apiKey: string): AiProvider {
           output_config: { format: zodOutputFormat(params.schema), effort: params.effort },
         });
       } catch (error) {
+        console.error("KI-Aufruf fehlgeschlagen:", error);
         throw describeApiError(error);
       }
 
@@ -77,11 +82,24 @@ export function createAnthropicProvider(apiKey: string): AiProvider {
       if (response.stop_reason === "max_tokens") {
         throw new AiValidationError("Die Antwort wurde abgeschnitten.", usage);
       }
-      if (response.parsed_output === null || response.parsed_output === undefined) {
-        throw new AiValidationError("Die Antwort entsprach nicht dem geforderten Format.", usage);
+
+      const raw = response.content.flatMap((block) => (block.type === "text" ? [block.text] : [])).join("");
+      let json: unknown;
+      try {
+        json = JSON.parse(raw);
+      } catch {
+        throw new AiValidationError("Die Antwort war kein gültiges JSON.", usage);
+      }
+      const parsed = params.schema.safeParse(json);
+      if (!parsed.success) {
+        const issue = parsed.error.issues[0];
+        throw new AiValidationError(
+          `Feld „${issue.path.join(".") || "Antwort"}“: ${issue.message}`,
+          usage,
+        );
       }
 
-      return { output: response.parsed_output as T, model: response.model, ...usage };
+      return { output: parsed.data, model: response.model, ...usage };
     },
   };
 }
