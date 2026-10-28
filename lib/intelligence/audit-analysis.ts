@@ -34,7 +34,7 @@ Regeln:
 - Schreibe sachlich, konkret und auf Deutsch. Keine Übertreibungen, keine Abwertung des Betriebs.
 - design_quality_score (0 bis 100): 0–20 = veraltet, unübersichtlich oder kaum nutzbar; 21–40 = deutlich veraltet; 41–60 = brauchbar mit klaren Schwächen; 61–80 = zeitgemäß und sauber; 81–100 = sehr hochwertig. Maßstab sind aktuelle Websites vergleichbarer kleiner Betriebe.
 - Jedes Notizfeld besteht aus 1 bis 3 Sätzen.
-- findings: höchstens 6 konkrete Beobachtungen (je ein Satz), die sich im Verkaufsgespräch nutzen lassen.`;
+- findings: 3 bis 6 konkrete Beobachtungen (je ein Satz), die sich im Verkaufsgespräch nutzen lassen, jeweils mit passender Kategorie. Die technischen Messwerte (SSL, Meta-Angaben, Telefon-Link, Formular, Karte, Navigation) stehen bereits im Block <technische_pruefung> und werden separat aufgelistet: Wiederhole sie nicht, sondern nenne, was nur Screenshot und Text zeigen (Gesamteindruck, Lesbarkeit, Bildwelt, Vertrauen, Angebot, Ansprache).`;
 
 const yesNo = (value: boolean) => (value ? "ja" : "nein");
 
