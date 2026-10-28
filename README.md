@@ -35,11 +35,11 @@ Start mit einer klaren Zod-Fehlermeldung ab.
 
 ## Datenbank
 
-Migrationen: `supabase/migrations/` (0001 Enums, 0002 Organisation + Nutzer + RLS, 0003 Leads + Aufgaben, 0004 Audit-Log).
+Migrationen: `supabase/migrations/` (0001 Enums, 0002 Organisation + Nutzer + RLS, 0003 Leads + Aufgaben, 0004 Audit-Log, 0005 Tabellenrechte).
 Einspielen in ein neues Supabase-Projekt — einfachster Weg:
 
 1. Supabase Dashboard → **SQL Editor** → Inhalt von `0001_…sql` einfügen → **Run**.
-2. Dasselbe der Reihe nach mit `0002_…sql`, `0003_…sql` und `0004_…sql`.
+2. Dasselbe der Reihe nach mit `0002_…sql`, `0003_…sql`, `0004_…sql` und `0005_…sql`.
 3. **Authentication → Users → Add user → Create new user** (E-Mail + Passwort,
    „Auto Confirm User" an). Das ist der Owner-Login.
 4. `supabase/bootstrap-owner.sql` im SQL Editor öffnen, `DEINE@EMAIL.DE` durch die
