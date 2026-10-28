@@ -23,8 +23,8 @@ begin
   delete from sites where organization_id = v_org and preview_slug in ('weber-modern', 'weber-traditional', 'weber-premium');
 
   -- Stil: modern
-  insert into sites (organization_id, lead_id, company_name, style, status, preview_slug, primary_phone, primary_cta_label)
-  values (v_org, v_lead, 'Elektro Weber', 'modern', 'PREVIEW', 'weber-modern', '07821 555 0101', 'Jetzt anrufen')
+  insert into sites (organization_id, lead_id, company_name, style, package, status, preview_slug, primary_phone, primary_cta_label)
+  values (v_org, v_lead, 'Elektro Weber', 'modern', 'BUSINESS', 'PREVIEW', 'weber-modern', '07821 555 0101', 'Jetzt anrufen')
   returning id into v_site;
 
   insert into design_tokens (site_id, palette_id, primary_color, accent_color, background_color, surface_color, text_color,
@@ -45,8 +45,8 @@ begin
     values (v_site, '/datenschutz', 'datenschutz'::page_type, $j$[{"component_type":"navbar","variant":"standard","content":{"logo_text":"Elektro Weber","links":[{"label":"Startseite","href":"/"},{"label":"Leistungen","href":"/leistungen"},{"label":"Kontakt","href":"/kontakt"}],"cta_label":"Jetzt anrufen","cta_href":"tel:078215550101"}},{"component_type":"legal","variant":"standard","content":{"kind":"datenschutz","title":"Datenschutzerklärung","notice":"Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.","fields":[{"label":"Verantwortlicher","value":"Elektro Weber\nHauptstraße 12\n77933 Lahr"},{"label":"Kontakt","value":"info@elektro-weber.example.com"}],"sections":[{"heading":"Hosting","placeholder":"[Angaben zum Hosting-Anbieter ergänzen]"},{"heading":"Kontaktaufnahme","placeholder":"[Angaben zur Verarbeitung von Anfragen ergänzen]"},{"heading":"Ihre Rechte","placeholder":"[Standardtext zu Betroffenenrechten ergänzen]"}]}},{"component_type":"footer","variant":"standard","content":{"company_name":"Elektro Weber","tagline":"Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.","address":"Hauptstraße 12\n77933 Lahr","phone":"07821 555 0101","email":"info@elektro-weber.example.com","links":[{"label":"Startseite","href":"/"},{"label":"Leistungen","href":"/leistungen"},{"label":"Kontakt","href":"/kontakt"}],"legal_links":[{"label":"Impressum","href":"/impressum"},{"label":"Datenschutz","href":"/datenschutz"}]}}]$j$::jsonb, $j${"title":"Datenschutz — Elektro Weber","meta_description":"Datenschutzerklärung von Elektro Weber."}$j$::jsonb);
 
   -- Stil: traditional
-  insert into sites (organization_id, lead_id, company_name, style, status, preview_slug, primary_phone, primary_cta_label)
-  values (v_org, v_lead, 'Elektro Weber', 'traditional', 'PREVIEW', 'weber-traditional', '07821 555 0101', 'Jetzt anrufen')
+  insert into sites (organization_id, lead_id, company_name, style, package, status, preview_slug, primary_phone, primary_cta_label)
+  values (v_org, v_lead, 'Elektro Weber', 'traditional', 'BUSINESS', 'PREVIEW', 'weber-traditional', '07821 555 0101', 'Jetzt anrufen')
   returning id into v_site;
 
   insert into design_tokens (site_id, palette_id, primary_color, accent_color, background_color, surface_color, text_color,
@@ -67,8 +67,8 @@ begin
     values (v_site, '/datenschutz', 'datenschutz'::page_type, $j$[{"component_type":"navbar","variant":"centered","content":{"logo_text":"Elektro Weber","links":[{"label":"Startseite","href":"/"},{"label":"Leistungen","href":"/leistungen"},{"label":"Kontakt","href":"/kontakt"}],"cta_label":"Jetzt anrufen","cta_href":"tel:078215550101"}},{"component_type":"legal","variant":"standard","content":{"kind":"datenschutz","title":"Datenschutzerklärung","notice":"Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.","fields":[{"label":"Verantwortlicher","value":"Elektro Weber\nHauptstraße 12\n77933 Lahr"},{"label":"Kontakt","value":"info@elektro-weber.example.com"}],"sections":[{"heading":"Hosting","placeholder":"[Angaben zum Hosting-Anbieter ergänzen]"},{"heading":"Kontaktaufnahme","placeholder":"[Angaben zur Verarbeitung von Anfragen ergänzen]"},{"heading":"Ihre Rechte","placeholder":"[Standardtext zu Betroffenenrechten ergänzen]"}]}},{"component_type":"footer","variant":"standard","content":{"company_name":"Elektro Weber","tagline":"Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.","address":"Hauptstraße 12\n77933 Lahr","phone":"07821 555 0101","email":"info@elektro-weber.example.com","links":[{"label":"Startseite","href":"/"},{"label":"Leistungen","href":"/leistungen"},{"label":"Kontakt","href":"/kontakt"}],"legal_links":[{"label":"Impressum","href":"/impressum"},{"label":"Datenschutz","href":"/datenschutz"}]}}]$j$::jsonb, $j${"title":"Datenschutz — Elektro Weber","meta_description":"Datenschutzerklärung von Elektro Weber."}$j$::jsonb);
 
   -- Stil: premium
-  insert into sites (organization_id, lead_id, company_name, style, status, preview_slug, primary_phone, primary_cta_label)
-  values (v_org, v_lead, 'Elektro Weber', 'premium', 'PREVIEW', 'weber-premium', '07821 555 0101', 'Jetzt anrufen')
+  insert into sites (organization_id, lead_id, company_name, style, package, status, preview_slug, primary_phone, primary_cta_label)
+  values (v_org, v_lead, 'Elektro Weber', 'premium', 'BUSINESS_PLUS', 'PREVIEW', 'weber-premium', '07821 555 0101', 'Jetzt anrufen')
   returning id into v_site;
 
   insert into design_tokens (site_id, palette_id, primary_color, accent_color, background_color, surface_color, text_color,

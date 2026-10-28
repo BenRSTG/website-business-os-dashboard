@@ -2,6 +2,7 @@ import type { Fact } from "@/lib/intelligence/company-profile";
 import type { Lead } from "@/lib/leads/types";
 import { parseSections } from "./content/schemas";
 import type { PageDraft } from "./compose";
+import { requiredSlugs, type SitePackage } from "./packages";
 import { contrastIssues, designTokensSchema, type DesignTokens } from "./tokens";
 
 export interface QualityReport {
@@ -13,7 +14,6 @@ export interface QualityReport {
   placeholders: string[];
 }
 
-export const REQUIRED_SLUGS = ["/", "/leistungen", "/kontakt", "/impressum", "/datenschutz"] as const;
 
 // Aussagen, die ohne Beleg nie auf der Website stehen dürfen (docs/10 §B2).
 const CLAIM_KEYWORDS = [
@@ -73,6 +73,7 @@ function collectStrings(value: unknown, out: string[] = []): string[] {
 }
 
 export function checkQuality(input: {
+  package: SitePackage;
   lead: Lead;
   facts: Fact[];
   tokens: DesignTokens;
@@ -85,7 +86,7 @@ export function checkQuality(input: {
   const warnings: string[] = [];
   const placeholders: string[] = [];
 
-  for (const slug of REQUIRED_SLUGS) {
+  for (const slug of requiredSlugs(input.package)) {
     if (!pages.some((p) => p.slug === slug)) errors.push(`Pflichtseite ${slug} fehlt`);
   }
 

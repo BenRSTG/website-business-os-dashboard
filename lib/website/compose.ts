@@ -5,6 +5,7 @@ import { telHref } from "./content/links";
 import type { Section } from "./content/schemas";
 import { datenschutzSection, impressumSection, type LegalFacts } from "./legal";
 import type { Feature } from "./features";
+import { isOnePager, type SitePackage } from "./packages";
 import { fitText, type FeatureCopy, type HomeCopy, type LeistungenCopy, type Plan, type SeoOutput } from "./prompts";
 import type { SiteStyle } from "./tokens";
 
@@ -49,7 +50,9 @@ export interface ComposeInput {
   plan: Plan;
   style: SiteStyle;
   home: HomeCopy;
-  leistungen: LeistungenCopy;
+  /** Fehlt bei Basis (eine Seite): dort gibt es keine eigene Leistungs- und Kontaktseite */
+  leistungen: LeistungenCopy | null;
+  package: SitePackage;
   seo: SeoOutput | null;
   features: Feature[];
   featureCopy: FeatureCopy | null;
@@ -57,12 +60,16 @@ export interface ComposeInput {
 
 export function composePages(input: ComposeInput): PageDraft[] {
   const { lead, plan, style, home, leistungen, features, featureCopy } = input;
+  const onePager = isOnePager(input.package);
+  // Basis: alles auf einer Seite, das Menü springt zu den Abschnitten.
+  const toServices = onePager ? "/#leistungen" : "/leistungen";
+  const toContact = onePager ? "/#kontakt" : "/kontakt";
   const has = (f: Feature) => features.includes(f);
   const copy = featureCopy;
   const v = STYLE_VARIANTS[style];
   const address = leadAddress(lead);
   const callLabel = lead.phone ? "Jetzt anrufen" : "Anfrage senden";
-  const callHref = lead.phone ? telHref(lead.phone) : "/kontakt";
+  const callHref = lead.phone ? telHref(lead.phone) : toContact;
   const legalFacts: LegalFacts = { companyName: lead.company_name, address, phone: lead.phone, email: lead.email };
   const hasRating = lead.google_rating !== null && lead.google_rating_count !== null;
 
@@ -73,8 +80,8 @@ export function composePages(input: ComposeInput): PageDraft[] {
       logo_text: lead.company_name,
       links: [
         { label: "Startseite", href: "/" },
-        { label: "Leistungen", href: "/leistungen" },
-        { label: "Kontakt", href: "/kontakt" },
+        { label: "Leistungen", href: toServices },
+        { label: "Kontakt", href: toContact },
       ],
       cta_label: callLabel,
       cta_href: callHref,
@@ -92,8 +99,8 @@ export function composePages(input: ComposeInput): PageDraft[] {
       email: lead.email,
       links: [
         { label: "Startseite", href: "/" },
-        { label: "Leistungen", href: "/leistungen" },
-        { label: "Kontakt", href: "/kontakt" },
+        { label: "Leistungen", href: toServices },
+        { label: "Kontakt", href: toContact },
       ],
       legal_links: [
         { label: "Impressum", href: "/impressum" },
@@ -112,7 +119,7 @@ export function composePages(input: ComposeInput): PageDraft[] {
       cta_label: callLabel,
       cta_href: callHref,
       secondary_label: "Unsere Leistungen",
-      secondary_href: "/leistungen",
+      secondary_href: toServices,
       image: placeholderImage("hero", IMAGE_ALT[lead.industry]),
       points: home.points,
     },
@@ -222,42 +229,53 @@ export function composePages(input: ComposeInput): PageDraft[] {
     {
       component_type: "services",
       variant: v.services,
-      content: { headline: leistungen.headline, intro: leistungen.intro, items: leistungen.items },
+      content: { headline: leistungen?.headline ?? home.services_headline, intro: leistungen?.intro ?? home.services_intro, items: leistungen?.items ?? home.services_items },
     },
     ...(has("pricing_team") ? [pricingSection] : []),
     footer,
   ];
 
-  const kontaktSections: Section[] = [
-    navbar,
-    {
-      component_type: "contact",
-      variant: v.contact,
-      content: {
-        headline: leistungen.contact_headline,
-        intro: leistungen.contact_intro,
-        phone: lead.phone,
-        email: lead.email,
-        address,
-        form_note: "Die Daten aus dem Formular verwenden wir nur, um Ihre Anfrage zu beantworten.",
-      },
+  const contactSection: Section = {
+    component_type: "contact",
+    variant: v.contact,
+    content: {
+      headline: leistungen?.contact_headline ?? "Kontakt",
+      intro: leistungen?.contact_intro ?? "Rufen Sie uns an oder schreiben Sie uns. Wir melden uns zeitnah bei Ihnen.",
+      phone: lead.phone,
+      email: lead.email,
+      address,
+      form_note: "Die Daten aus dem Formular verwenden wir nur, um Ihre Anfrage zu beantworten.",
     },
-    ...(has("booking_request") ? [bookingSection] : []),
-    ...(has("hours_area") ? [hoursSection] : []),
-    ...(has("map") && address
+  };
+  const locationSections: Section[] =
+    has("map") && address
       ? [
           {
             component_type: "location",
             variant: "map-text",
-            content: {
-              headline: "So finden Sie uns",
-              address: oneLine(address),
-              area_text: null,
-              map_query: oneLine(address),
-            },
-          } satisfies Section,
+            content: { headline: "So finden Sie uns", address: oneLine(address), area_text: null, map_query: oneLine(address) },
+          },
         ]
-      : []),
+      : [];
+
+  const kontaktSections: Section[] = [
+    navbar,
+    contactSection,
+    ...(has("booking_request") ? [bookingSection] : []),
+    ...(has("hours_area") ? [hoursSection] : []),
+    ...locationSections,
+    footer,
+  ];
+
+  // Basis: Startseite mit allem Nötigen (Leistungen, Über uns, Zeiten, Kontakt, Karte), ohne FAQ und ohne weitere Seiten.
+  const onePagerSections: Section[] = [
+    navbar,
+    heroSection,
+    homeSections.find((s) => s.component_type === "services")!,
+    homeSections.find((s) => s.component_type === "about")!,
+    ...(has("hours_area") ? [hoursSection] : []),
+    contactSection,
+    ...locationSections,
     footer,
   ];
 
@@ -290,11 +308,25 @@ export function composePages(input: ComposeInput): PageDraft[] {
 
   const legalSeo = (title: string) => ({ title: `${title} — ${lead.company_name}`.slice(0, 90) });
 
-  return [
-    { slug: "/", page_type: "home", title: "Startseite", sections: homeSections, seo: { ...seoFor("/", "Startseite"), schema: businessSchema } },
-    { slug: "/leistungen", page_type: "leistungen", title: "Leistungen", sections: leistungenSections, seo: seoFor("/leistungen", "Leistungen") },
-    { slug: "/kontakt", page_type: "kontakt", title: "Kontakt", sections: kontaktSections, seo: seoFor("/kontakt", "Kontakt") },
+  const legalPages: PageDraft[] = [
     { slug: "/impressum", page_type: "impressum", title: "Impressum", sections: [navbar, impressumSection(legalFacts), footer], seo: legalSeo("Impressum") },
     { slug: "/datenschutz", page_type: "datenschutz", title: "Datenschutz", sections: [navbar, datenschutzSection(legalFacts, { map: has("map"), booking: has("booking_request") }), footer], seo: legalSeo("Datenschutz") },
+  ];
+
+  const homePage: PageDraft = {
+    slug: "/",
+    page_type: "home",
+    title: "Startseite",
+    sections: onePager ? onePagerSections : homeSections,
+    seo: { ...seoFor("/", "Startseite"), schema: businessSchema },
+  };
+
+  if (onePager) return [homePage, ...legalPages];
+
+  return [
+    homePage,
+    { slug: "/leistungen", page_type: "leistungen", title: "Leistungen", sections: leistungenSections, seo: seoFor("/leistungen", "Leistungen") },
+    { slug: "/kontakt", page_type: "kontakt", title: "Kontakt", sections: kontaktSections, seo: seoFor("/kontakt", "Kontakt") },
+    ...legalPages,
   ];
 }

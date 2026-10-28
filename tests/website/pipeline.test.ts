@@ -163,8 +163,9 @@ describe("Qualitätsprüfung", () => {
   });
 
   it("blockiert fehlende Pflichtseiten, ungültige Abschnitte und schlechten Kontrast", () => {
-    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo, features: ["map"], featureCopy: null });
+    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo, features: ["map"], featureCopy: null, package: "BUSINESS" });
     const broken = checkQuality({
+      package: "BUSINESS",
       lead,
       facts,
       tokens: { ...tokensFor("traditional", null), text_color: "#EEEEEE" },
@@ -178,12 +179,12 @@ describe("Qualitätsprüfung", () => {
   });
 
   it("erkennt manipulierte Kontaktdaten im Footer", () => {
-    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo, features: ["map"], featureCopy: null });
+    const pages = composePages({ lead, plan, style: "traditional", home, leistungen, seo, features: ["map"], featureCopy: null, package: "BUSINESS" });
     const tampered = pages.map((p) => ({
       ...p,
       sections: p.sections.map((s) => (s.component_type === "footer" ? { ...s, content: { ...s.content, phone: "0900 123" } } : s)),
     }));
-    const r = checkQuality({ lead, facts, tokens: tokensFor("traditional", null), pages: tampered, aiCopy: {} });
+    const r = checkQuality({ package: "BUSINESS", lead, facts, tokens: tokensFor("traditional", null), pages: tampered, aiCopy: {} });
     expect(r.errors.some((e) => e.includes("Telefonnummer"))).toBe(true);
   });
 });

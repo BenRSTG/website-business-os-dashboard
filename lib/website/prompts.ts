@@ -71,7 +71,7 @@ export type FeatureCopy = z.infer<typeof featureCopySchema>;
 export const seoOutputSchema = z.object({
   pages: z
     .array(z.object({ slug: z.enum(["/", "/leistungen", "/kontakt"]), title: text(120), meta_description: text(300) }))
-    .min(3)
+    .min(1)
     .max(3),
 });
 export type SeoOutput = z.infer<typeof seoOutputSchema>;
@@ -94,10 +94,16 @@ const PALETTE_GUIDE = `Paletten (Kennung: Anmutung):
 - traditional-01: Tannengrün mit Gold, warmes Papierweiß
 - traditional-02: Weinrot mit Gold, warmes Papierweiß
 - traditional-03: Marineblau mit Gold, warmes Papierweiß
+- modern-04: Dunkelblau mit gelbem Akzent, dunkel
+- modern-05: Dunkelgrün mit orangem Akzent, dunkel
+- traditional-04: Dunkles Waldgrün mit Gold, dunkel
+- traditional-05: Dunkles Weinrot mit Gold, dunkel
 - premium-01: Gold auf Dunkel
 - premium-02: Silberblau auf Dunkel
 - premium-03: Kupfer auf Dunkel
-Die Palette muss zum gewählten Stil passen (Kennung beginnt mit dem Stilnamen).`;
+- premium-04: Dunkles Gold auf hellem Papierweiß, hell
+- premium-05: Marineblau auf hellem Grau, hell
+Die Palette muss zum gewählten Stil passen (Kennung beginnt mit dem Stilnamen). Die Farbwelt (hell oder dunkel) ergibt sich aus der Palette.`;
 
 /** Stammdaten und Fakten als abgegrenzte Blöcke. Kontaktdaten gehen nicht an die KI; das System setzt sie selbst ein. */
 export function buildBrief(lead: Lead, profile: CompanyProfileRow): string {
@@ -141,6 +147,8 @@ Wähle auf Grundlage von Branche und den verifizierten Fakten. Gibt es keinen kl
 hero_variant: "split" (Text links, Bild rechts), "centered" (zentrierter Text mit Bild darunter) oder "image-full" (Vollbild mit Text darüber, wirkt am stärksten bei dunklen Stilen).
 
 ${PALETTE_GUIDE}
+
+Im Block <vorgaben> stehen Festlegungen des Nutzers zu Stil und Farbwelt. Halte dich daran: ist ein Stil oder eine Farbwelt festgelegt, wähle Stil und Palette entsprechend. Steht dort "du entscheidest", wähle selbst.
 
 ${BLOCK_RULES}
 "reason": ein Satz auf Deutsch, warum du so entschieden hast.`;
@@ -198,20 +206,30 @@ export function buildFeaturesUserText(brief: string, features: Feature[], home: 
   ].join("\n");
 }
 
-export const SEO_SYSTEM_PROMPT = `Du schreibst Suchmaschinen-Titel und Beschreibungen für die drei Seiten einer Handwerker-Website (Startseite "/", "/leistungen", "/kontakt").
+export const SEO_SYSTEM_PROMPT = `Du schreibst Suchmaschinen-Titel und Beschreibungen für Seiten einer Handwerker-Website (Startseite "/", "/leistungen", "/kontakt"). Im Block <seiten> steht, für welche Seiten du sie schreibst; liefere genau diese.
 - title: höchstens 60 Zeichen, enthält Betriebsname oder Branche und Ort.
 - meta_description: höchstens 155 Zeichen, sachlich, ohne erfundene Angaben (keine Zahlen, Auszeichnungen oder Preise, die nicht in den Daten stehen).
 Alles auf Deutsch.
 
 ${BLOCK_RULES}`;
 
-export function buildSeoUserText(brief: string, home: HomeCopy, leistungen: LeistungenCopy): string {
+export function buildSeoUserText(brief: string, home: HomeCopy, leistungen: LeistungenCopy | null, pages: string[]): string {
   return [
     brief,
+    "<seiten>",
+    pages.join("\n"),
+    "</seiten>",
     "<seitentexte>",
     `Startseite: ${sanitizeUntrusted(home.headline)} — ${sanitizeUntrusted(home.subheadline)}`,
-    `Leistungen: ${leistungen.items.map((i) => sanitizeUntrusted(i.title)).join(", ")}`,
-    `Kontakt: ${sanitizeUntrusted(leistungen.contact_headline)}`,
+    `Leistungen: ${(leistungen?.items ?? home.services_items).map((i) => sanitizeUntrusted(i.title)).join(", ")}`,
+    ...(leistungen ? [`Kontakt: ${sanitizeUntrusted(leistungen.contact_headline)}`] : []),
     "</seitentexte>",
   ].join("\n");
+}
+
+/** Festlegungen des Nutzers als Eingabe für den Planschritt (die Durchsetzung passiert zusätzlich im Code, siehe normalizePlan). */
+export function buildPlanConstraints(options: { style: string | null; scheme: string | null }): string {
+  const style = options.style ? `festgelegt auf "${options.style}"` : "du entscheidest";
+  const scheme = options.scheme ? `festgelegt auf "${options.scheme === "dark" ? "dunkel" : "hell"}"` : "du entscheidest";
+  return `<vorgaben>\nStil: ${style}\nFarbwelt: ${scheme}\n</vorgaben>`;
 }

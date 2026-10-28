@@ -6,6 +6,7 @@ import { formatDate, formatDateTime } from "@/lib/datetime";
 import type { CompanyProfileRow } from "@/lib/intelligence/types";
 import { isExpired, isResumable, previewUrl, type DemoSite, type GenerationRun } from "@/lib/website/queries";
 import { normalizeFeatures } from "@/lib/website/features";
+import { PACKAGE_LABELS, normalizePackage } from "@/lib/website/packages";
 import { type StepId } from "@/lib/website/steps";
 
 const STYLE_LABELS = { modern: "Modern", traditional: "Klassisch", premium: "Hochwertig" } as const;
@@ -66,7 +67,7 @@ export function DemoPanel({
         <Card className="gap-3 px-4">
           <SectionTitle>Aktuelle Demo</SectionTitle>
           <p className="text-sm">
-            Stil: <span className="font-semibold">{STYLE_LABELS[site.style]}</span> · erstellt am {formatDateTime(site.created_at)} · KI-Kosten{" "}
+            Paket: <span className="font-semibold">{PACKAGE_LABELS[normalizePackage(site.package)]}</span> · Stil: <span className="font-semibold">{STYLE_LABELS[site.style]}</span> · erstellt am {formatDateTime(site.created_at)} · KI-Kosten{" "}
             {Number(run?.cost_total_eur ?? 0).toFixed(2).replace(".", ",")} €
           </p>
           <a
@@ -148,6 +149,7 @@ export function DemoPanel({
               label={site ? "Demo neu erzeugen" : "Website-Demo erstellen"}
               variant={site ? "outline" : "default"}
               defaultFeatures={site ? normalizeFeatures(site.features) : undefined}
+              defaultPackage={site ? normalizePackage(site.package) : undefined}
               confirmText="Die bisherige Demo wird durch die neue ersetzt, sobald diese fertig ist, und ihr Link funktioniert danach nicht mehr. Fortfahren?"
             />
           </>

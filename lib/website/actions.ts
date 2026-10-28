@@ -18,7 +18,8 @@ import {
   type RunAi,
   type RunState,
 } from "./pipeline";
-import { DEFAULT_FEATURES, normalizeFeatures, type Feature } from "./features";
+import { DEFAULT_FEATURES, type Feature } from "./features";
+import { initialState, type DemoRequest } from "./initial-state";
 import { generatePassword } from "./password";
 import { revalidateSites } from "./revalidate";
 import { previewSlug } from "./slug";
@@ -56,7 +57,7 @@ function userMessage(error: unknown): string {
   return "Unerwarteter Fehler. Bitte erneut versuchen.";
 }
 
-export async function startDemoRun(leadId: string, requestedFeatures?: string[]): Promise<DemoStepResult> {
+export async function startDemoRun(leadId: string, request: DemoRequest = {}): Promise<DemoStepResult> {
   const { supabase } = await requireUser();
   if (!leadIdSchema.safeParse(leadId).success) return fail("Ungültiger Lead.");
   const lead = await getLead(leadId);
@@ -83,7 +84,7 @@ export async function startDemoRun(leadId: string, requestedFeatures?: string[])
 
     const { data: created, error } = await supabase
       .from("site_generation_runs")
-      .insert({ lead_id: lead.id, current_step: STEPS[0], state: { features: requestedFeatures === undefined ? DEFAULT_FEATURES : normalizeFeatures(requestedFeatures) } })
+      .insert({ lead_id: lead.id, current_step: STEPS[0], state: initialState(request) })
       .select("id")
       .single();
     if (error) return fail("Der Lauf konnte nicht gestartet werden.");
@@ -195,6 +196,7 @@ export async function advanceDemoRun(runId: string, expectedStep: string): Promi
 
 const DEMO_DAYS = 14;
 
+
 async function saveDemoSite(
   supabase: Supabase,
   lead: Lead,
@@ -213,6 +215,7 @@ async function saveDemoSite(
         lead_id: lead.id,
         company_name: lead.company_name,
         style: result.style,
+        package: result.package,
         status: "PREVIEW",
         preview_slug: slug,
         preview_expires_at: new Date(Date.now() + DEMO_DAYS * 24 * 60 * 60 * 1000).toISOString(),

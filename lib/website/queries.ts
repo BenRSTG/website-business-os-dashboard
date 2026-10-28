@@ -24,6 +24,7 @@ export interface DemoSite {
   preview_expires_at: string | null;
   preview_protected: boolean;
   features: string[];
+  package: string;
   created_at: string;
 }
 
@@ -44,7 +45,7 @@ export async function getDemoSites(leadId: string): Promise<DemoSite[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("sites")
-    .select("id, preview_slug, style, status, preview_expires_at, preview_protected, features, created_at")
+    .select("id, preview_slug, style, status, preview_expires_at, preview_protected, features, package, created_at")
     .eq("lead_id", leadId)
     .order("created_at", { ascending: false });
   if (error) throw new Error(`Demos konnten nicht geladen werden: ${error.message}`);
