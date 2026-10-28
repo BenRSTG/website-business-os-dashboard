@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SidebarNav } from "@/components/domain/SidebarNav";
+import { SidebarNav, SidebarNavFallback } from "@/components/domain/SidebarNav";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "./actions";
 
@@ -51,7 +51,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </span>
           <span className="font-heading text-sm font-bold">Website Business OS</span>
         </div>
-        <SidebarNav />
+        <Suspense fallback={<SidebarNavFallback />}>
+          <SidebarNav />
+        </Suspense>
         <div className="md:mt-auto">
           <Suspense fallback={<div className="h-20" />}>
             <UserFooter />

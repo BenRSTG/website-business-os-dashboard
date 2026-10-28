@@ -11,13 +11,11 @@ const items: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/customers", label: "Customers", icon: Building2 },
 ];
 
-export function SidebarNav() {
-  const pathname = usePathname();
-
+function NavList({ isActive }: { isActive: (href: string) => boolean }) {
   return (
     <nav aria-label="Hauptnavigation" className="flex gap-1 md:flex-col">
       {items.map(({ href, label, icon: Icon }) => {
-        const active = pathname === href || pathname.startsWith(`${href}/`);
+        const active = isActive(href);
         return (
           <Link
             key={href}
@@ -37,4 +35,17 @@ export function SidebarNav() {
       })}
     </nav>
   );
+}
+
+// Der aktuelle Pfad ist erst zur Laufzeit bekannt (dynamische Routen wie /leads/[leadId]) —
+// deshalb braucht SidebarNav eine Suspense-Grenze, solange liefert SidebarNavFallback die Links ohne Hervorhebung.
+export function SidebarNav() {
+  const pathname = usePathname();
+  return (
+    <NavList isActive={(href) => pathname === href || pathname.startsWith(`${href}/`)} />
+  );
+}
+
+export function SidebarNavFallback() {
+  return <NavList isActive={() => false} />;
 }
