@@ -12,6 +12,7 @@ function describe(entry: ActivityEntry): string {
   if (entry.action_type === "lead.analyzed") return `Website analysiert: ${name}`;
   if (entry.action_type === "lead.scored") return `Scores berechnet: ${name}`;
   if (entry.action_type === "lead.profiled") return `Unternehmensprofil erstellt: ${name}`;
+  if (entry.action_type === "lead.demo_created") return `Website-Demo erstellt: ${name}`;
   return name;
 }
 

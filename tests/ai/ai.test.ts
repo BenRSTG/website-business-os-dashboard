@@ -18,6 +18,7 @@ const config: AiConfig = {
   models: { capable: "claude-opus-5-5", cheap: "claude-haiku-5-5" },
   maxRunsPerHour: 3,
   maxCostPerRunEur: 1,
+  maxCostPerDemoEur: 2,
   usdEurRate: 0.92,
 };
 

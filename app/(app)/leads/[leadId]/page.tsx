@@ -4,6 +4,7 @@ import { Pencil } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AuditPanel } from "@/components/domain/AuditPanel";
+import { DemoPanel } from "@/components/domain/DemoPanel";
 import { ProfilePanel } from "@/components/domain/ProfilePanel";
 import { SalesActions } from "@/components/domain/SalesActions";
 import { ScoreBadge } from "@/components/domain/ScoreBadge";
@@ -25,6 +26,7 @@ import {
   getScoringConfig,
 } from "@/lib/intelligence/queries";
 import { getLead, getLeadTasks } from "@/lib/leads/queries";
+import { getDemoSites, getLatestRun } from "@/lib/website/queries";
 import type { Lead } from "@/lib/leads/types";
 import { cn } from "@/lib/utils";
 
@@ -111,30 +113,7 @@ function Overview({ lead }: { lead: Lead }) {
   );
 }
 
-function NotYetRun({
-  title,
-  hint,
-  buttonLabel,
-  milestone,
-}: {
-  title: string;
-  hint: string;
-  buttonLabel: string;
-  milestone: string;
-}) {
-  return (
-    <Card className="items-center gap-3 px-4 py-12 text-center">
-      <p className="font-medium">{title}</p>
-      <p className="max-w-md text-sm text-muted-foreground">{hint}</p>
-      <Button disabled title={`Folgt in ${milestone}`}>
-        {buttonLabel}
-      </Button>
-      <p className="text-xs text-muted-foreground">Verfügbar ab {milestone}.</p>
-    </Card>
-  );
-}
-
-// Die Website-Analyse (PageSpeed + KI) kann länger als die Standardlaufzeit brauchen.
+// Website-Analyse (PageSpeed + KI) und einzelne Schritte der Demo-Erstellung können länger als die Standardlaufzeit brauchen.
 export const maxDuration = 120;
 
 export default async function LeadDetailPage({
@@ -151,12 +130,14 @@ export default async function LeadDetailPage({
     ? (requestedTab as TabValue)
     : "uebersicht";
 
-  const [tasks, scores, config, audit, profile] = await Promise.all([
+  const [tasks, scores, config, audit, profile, demoRun, demoSites] = await Promise.all([
     getLeadTasks(lead.id),
     getLatestScores(lead.id),
     getScoringConfig(),
     tab === "audit" ? getLatestAudit(lead.id) : Promise.resolve(null),
-    tab === "profil" ? getLatestProfile(lead.id) : Promise.resolve(null),
+    tab === "profil" || tab === "demos" ? getLatestProfile(lead.id) : Promise.resolve(null),
+    tab === "demos" ? getLatestRun(lead.id) : Promise.resolve(null),
+    tab === "demos" ? getDemoSites(lead.id) : Promise.resolve([]),
   ]);
   const openTasks = tasks
     .filter((t) => t.status === "OPEN")
@@ -223,14 +204,7 @@ export default async function LeadDetailPage({
           {tab === "uebersicht" ? <Overview lead={lead} /> : null}
           {tab === "audit" ? <AuditPanel lead={lead} audit={audit} scores={scores} /> : null}
           {tab === "profil" ? <ProfilePanel leadId={lead.id} profile={profile} /> : null}
-          {tab === "demos" ? (
-            <NotYetRun
-              title="Noch keine Demo erstellt"
-              hint="Aus den Lead-Daten entsteht hier ein vollständiger Website-Entwurf mit eigener Vorschau-Adresse."
-              buttonLabel="Website-Demo erstellen"
-              milestone="Milestone 4"
-            />
-          ) : null}
+          {tab === "demos" ? <DemoPanel leadId={lead.id} profile={profile} run={demoRun} sites={demoSites} /> : null}
         </div>
 
         <aside className="flex flex-col gap-4">

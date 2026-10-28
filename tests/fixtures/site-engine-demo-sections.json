@@ -1,0 +1,1724 @@
+[
+  {
+    "style": "modern",
+    "slug": "/",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "hero",
+        "variant": "split",
+        "content": {
+          "eyebrow": "Elektrofachbetrieb in Lahr",
+          "headline": "Strom, der einfach funktioniert",
+          "subheadline": "Installation, Reparatur und Notdienst für Privathaushalte und Betriebe — zuverlässig und zu fairen Preisen.",
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101",
+          "secondary_label": "Unsere Leistungen",
+          "secondary_href": "/leistungen",
+          "image": {
+            "slot_id": "hero",
+            "alt": "Elektriker bei der Arbeit am Sicherungskasten",
+            "source": "placeholder"
+          },
+          "points": [
+            "Festpreis nach Besichtigung",
+            "Termin meist innerhalb einer Woche",
+            "Meisterbetrieb"
+          ]
+        }
+      },
+      {
+        "component_type": "services",
+        "variant": "grid-cards",
+        "content": {
+          "headline": "Was wir für Sie tun",
+          "intro": "Von der Steckdose bis zur Photovoltaikanlage.",
+          "items": [
+            {
+              "title": "Elektroinstallation",
+              "description": "Neubau, Umbau und Erweiterung — sauber geplant und nach aktuellen Vorschriften ausgeführt."
+            },
+            {
+              "title": "Reparatur und Störungsbehebung",
+              "description": "Wenn der Strom ausfällt oder eine Sicherung ständig fliegt, finden wir die Ursache."
+            },
+            {
+              "title": "Smart Home",
+              "description": "Licht, Heizung und Rollläden bequem steuern, auch nachträglich."
+            },
+            {
+              "title": "E-Check und Prüfungen",
+              "description": "Wiederkehrende Prüfung elektrischer Anlagen für Ihre Sicherheit und Versicherung."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "about",
+        "variant": "text-image",
+        "content": {
+          "headline": "Ein Betrieb, den Sie persönlich kennen",
+          "paragraphs": [
+            "Elektro Weber ist ein kleiner Meisterbetrieb. Sie sprechen mit den Menschen, die am Ende auch bei Ihnen vor Ort arbeiten.",
+            "Wir nehmen uns Zeit für eine ehrliche Beratung und sagen Ihnen vorab, was etwas kostet."
+          ],
+          "image": {
+            "slot_id": "about",
+            "alt": "Das Team von Elektro Weber",
+            "source": "placeholder"
+          },
+          "stats": [
+            {
+              "value": "20+",
+              "label": "Jahre Erfahrung"
+            },
+            {
+              "value": "1.200+",
+              "label": "Aufträge"
+            },
+            {
+              "value": "24 h",
+              "label": "Notdienst"
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "testimonials",
+        "variant": "cards-grid",
+        "content": {
+          "headline": "Das sagen unsere Kunden",
+          "items": [
+            {
+              "name": "Beispielkundin A.",
+              "quote": "Pünktlich, freundlich und sauber gearbeitet. Gern wieder.",
+              "rating": 5
+            },
+            {
+              "name": "Beispielkunde B.",
+              "quote": "Der Fehler war nach einer Stunde gefunden. Faire Rechnung.",
+              "rating": 5
+            },
+            {
+              "name": "Beispielkundin C.",
+              "quote": "Gute Beratung zum Smart Home, ohne etwas aufzuschwatzen.",
+              "rating": 4
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "faq",
+        "variant": "accordion",
+        "content": {
+          "headline": "Häufige Fragen",
+          "items": [
+            {
+              "question": "Wie schnell bekomme ich einen Termin?",
+              "answer": "In der Regel innerhalb einer Woche. Bei Störungen versuchen wir, am selben Tag zu helfen."
+            },
+            {
+              "question": "Was kostet ein Besuch?",
+              "answer": "Nach einer Besichtigung nennen wir einen Festpreis. Kleinere Reparaturen rechnen wir nach Aufwand ab."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "modern",
+    "slug": "/leistungen",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "services",
+        "variant": "grid-cards",
+        "content": {
+          "headline": "Leistungen im Überblick",
+          "items": [
+            {
+              "title": "Elektroinstallation",
+              "description": "Steckdosen, Beleuchtung, Verteilerschränke und Netzwerkdosen."
+            },
+            {
+              "title": "Photovoltaik und Speicher",
+              "description": "Anschluss und Inbetriebnahme Ihrer Anlage inklusive Zählerschrank."
+            },
+            {
+              "title": "Ladestation für Elektroautos",
+              "description": "Wallbox-Installation mit Beratung zur Förderung."
+            },
+            {
+              "title": "Notdienst",
+              "description": "Bei Stromausfall und Gefahr erreichen Sie uns rund um die Uhr."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "faq",
+        "variant": "accordion",
+        "content": {
+          "headline": "Fragen zu unseren Leistungen",
+          "items": [
+            {
+              "question": "Arbeiten Sie auch für Gewerbekunden?",
+              "answer": "Ja, von der Arztpraxis bis zur kleinen Werkstatt."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "modern",
+    "slug": "/kontakt",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "contact",
+        "variant": "form-info-side",
+        "content": {
+          "headline": "So erreichen Sie uns",
+          "intro": "Rufen Sie einfach an oder schreiben Sie uns — wir melden uns zeitnah.",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "opening_hours": [
+            {
+              "days": "Montag bis Freitag",
+              "hours": "7:30 bis 17:00 Uhr"
+            },
+            {
+              "days": "Notdienst",
+              "hours": "rund um die Uhr"
+            }
+          ],
+          "form_note": "Die Daten aus dem Formular verwenden wir nur, um Ihre Anfrage zu beantworten."
+        }
+      },
+      {
+        "component_type": "location",
+        "variant": "map-text",
+        "content": {
+          "headline": "Hier finden Sie uns",
+          "address": "Hauptstraße 12, 77933 Lahr",
+          "area_text": "Wir sind in Lahr und im Umkreis von etwa 30 Kilometern für Sie unterwegs.",
+          "map_query": "Lahr/Schwarzwald"
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "modern",
+    "slug": "/impressum",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "legal",
+        "variant": "standard",
+        "content": {
+          "kind": "impressum",
+          "title": "Impressum",
+          "notice": "Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.",
+          "fields": [
+            {
+              "label": "Anbieter",
+              "value": "Elektro Weber"
+            },
+            {
+              "label": "Anschrift",
+              "value": "Hauptstraße 12\n77933 Lahr"
+            },
+            {
+              "label": "Telefon",
+              "value": "07821 555 0101"
+            },
+            {
+              "label": "E-Mail",
+              "value": "info@elektro-weber.example.com"
+            },
+            {
+              "label": "Umsatzsteuer-ID",
+              "value": null
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "modern",
+    "slug": "/datenschutz",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "legal",
+        "variant": "standard",
+        "content": {
+          "kind": "datenschutz",
+          "title": "Datenschutzerklärung",
+          "notice": "Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.",
+          "fields": [
+            {
+              "label": "Verantwortlicher",
+              "value": "Elektro Weber\nHauptstraße 12\n77933 Lahr"
+            },
+            {
+              "label": "Kontakt",
+              "value": "info@elektro-weber.example.com"
+            }
+          ],
+          "sections": [
+            {
+              "heading": "Hosting",
+              "placeholder": "[Angaben zum Hosting-Anbieter ergänzen]"
+            },
+            {
+              "heading": "Kontaktaufnahme",
+              "placeholder": "[Angaben zur Verarbeitung von Anfragen ergänzen]"
+            },
+            {
+              "heading": "Ihre Rechte",
+              "placeholder": "[Standardtext zu Betroffenenrechten ergänzen]"
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "traditional",
+    "slug": "/",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "centered",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "hero",
+        "variant": "centered",
+        "content": {
+          "eyebrow": "Elektrofachbetrieb in Lahr",
+          "headline": "Strom, der einfach funktioniert",
+          "subheadline": "Installation, Reparatur und Notdienst für Privathaushalte und Betriebe — zuverlässig und zu fairen Preisen.",
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101",
+          "secondary_label": "Unsere Leistungen",
+          "secondary_href": "/leistungen",
+          "image": {
+            "slot_id": "hero",
+            "alt": "Elektriker bei der Arbeit am Sicherungskasten",
+            "source": "placeholder"
+          },
+          "points": [
+            "Festpreis nach Besichtigung",
+            "Termin meist innerhalb einer Woche",
+            "Meisterbetrieb"
+          ]
+        }
+      },
+      {
+        "component_type": "services",
+        "variant": "list-alternating",
+        "content": {
+          "headline": "Was wir für Sie tun",
+          "intro": "Von der Steckdose bis zur Photovoltaikanlage.",
+          "items": [
+            {
+              "title": "Elektroinstallation",
+              "description": "Neubau, Umbau und Erweiterung — sauber geplant und nach aktuellen Vorschriften ausgeführt."
+            },
+            {
+              "title": "Reparatur und Störungsbehebung",
+              "description": "Wenn der Strom ausfällt oder eine Sicherung ständig fliegt, finden wir die Ursache."
+            },
+            {
+              "title": "Smart Home",
+              "description": "Licht, Heizung und Rollläden bequem steuern, auch nachträglich."
+            },
+            {
+              "title": "E-Check und Prüfungen",
+              "description": "Wiederkehrende Prüfung elektrischer Anlagen für Ihre Sicherheit und Versicherung."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "about",
+        "variant": "stats-highlight",
+        "content": {
+          "headline": "Ein Betrieb, den Sie persönlich kennen",
+          "paragraphs": [
+            "Elektro Weber ist ein kleiner Meisterbetrieb. Sie sprechen mit den Menschen, die am Ende auch bei Ihnen vor Ort arbeiten.",
+            "Wir nehmen uns Zeit für eine ehrliche Beratung und sagen Ihnen vorab, was etwas kostet."
+          ],
+          "image": {
+            "slot_id": "about",
+            "alt": "Das Team von Elektro Weber",
+            "source": "placeholder"
+          },
+          "stats": [
+            {
+              "value": "20+",
+              "label": "Jahre Erfahrung"
+            },
+            {
+              "value": "1.200+",
+              "label": "Aufträge"
+            },
+            {
+              "value": "24 h",
+              "label": "Notdienst"
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "testimonials",
+        "variant": "slider",
+        "content": {
+          "headline": "Das sagen unsere Kunden",
+          "items": [
+            {
+              "name": "Beispielkundin A.",
+              "quote": "Pünktlich, freundlich und sauber gearbeitet. Gern wieder.",
+              "rating": 5
+            },
+            {
+              "name": "Beispielkunde B.",
+              "quote": "Der Fehler war nach einer Stunde gefunden. Faire Rechnung.",
+              "rating": 5
+            },
+            {
+              "name": "Beispielkundin C.",
+              "quote": "Gute Beratung zum Smart Home, ohne etwas aufzuschwatzen.",
+              "rating": 4
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "faq",
+        "variant": "accordion",
+        "content": {
+          "headline": "Häufige Fragen",
+          "items": [
+            {
+              "question": "Wie schnell bekomme ich einen Termin?",
+              "answer": "In der Regel innerhalb einer Woche. Bei Störungen versuchen wir, am selben Tag zu helfen."
+            },
+            {
+              "question": "Was kostet ein Besuch?",
+              "answer": "Nach einer Besichtigung nennen wir einen Festpreis. Kleinere Reparaturen rechnen wir nach Aufwand ab."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "traditional",
+    "slug": "/leistungen",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "centered",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "services",
+        "variant": "list-alternating",
+        "content": {
+          "headline": "Leistungen im Überblick",
+          "items": [
+            {
+              "title": "Elektroinstallation",
+              "description": "Steckdosen, Beleuchtung, Verteilerschränke und Netzwerkdosen."
+            },
+            {
+              "title": "Photovoltaik und Speicher",
+              "description": "Anschluss und Inbetriebnahme Ihrer Anlage inklusive Zählerschrank."
+            },
+            {
+              "title": "Ladestation für Elektroautos",
+              "description": "Wallbox-Installation mit Beratung zur Förderung."
+            },
+            {
+              "title": "Notdienst",
+              "description": "Bei Stromausfall und Gefahr erreichen Sie uns rund um die Uhr."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "faq",
+        "variant": "accordion",
+        "content": {
+          "headline": "Fragen zu unseren Leistungen",
+          "items": [
+            {
+              "question": "Arbeiten Sie auch für Gewerbekunden?",
+              "answer": "Ja, von der Arztpraxis bis zur kleinen Werkstatt."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "traditional",
+    "slug": "/kontakt",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "centered",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "contact",
+        "variant": "form-centered",
+        "content": {
+          "headline": "So erreichen Sie uns",
+          "intro": "Rufen Sie einfach an oder schreiben Sie uns — wir melden uns zeitnah.",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "opening_hours": [
+            {
+              "days": "Montag bis Freitag",
+              "hours": "7:30 bis 17:00 Uhr"
+            },
+            {
+              "days": "Notdienst",
+              "hours": "rund um die Uhr"
+            }
+          ],
+          "form_note": "Die Daten aus dem Formular verwenden wir nur, um Ihre Anfrage zu beantworten."
+        }
+      },
+      {
+        "component_type": "location",
+        "variant": "map-text",
+        "content": {
+          "headline": "Hier finden Sie uns",
+          "address": "Hauptstraße 12, 77933 Lahr",
+          "area_text": "Wir sind in Lahr und im Umkreis von etwa 30 Kilometern für Sie unterwegs.",
+          "map_query": "Lahr/Schwarzwald"
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "traditional",
+    "slug": "/impressum",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "centered",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "legal",
+        "variant": "standard",
+        "content": {
+          "kind": "impressum",
+          "title": "Impressum",
+          "notice": "Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.",
+          "fields": [
+            {
+              "label": "Anbieter",
+              "value": "Elektro Weber"
+            },
+            {
+              "label": "Anschrift",
+              "value": "Hauptstraße 12\n77933 Lahr"
+            },
+            {
+              "label": "Telefon",
+              "value": "07821 555 0101"
+            },
+            {
+              "label": "E-Mail",
+              "value": "info@elektro-weber.example.com"
+            },
+            {
+              "label": "Umsatzsteuer-ID",
+              "value": null
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "traditional",
+    "slug": "/datenschutz",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "centered",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "legal",
+        "variant": "standard",
+        "content": {
+          "kind": "datenschutz",
+          "title": "Datenschutzerklärung",
+          "notice": "Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.",
+          "fields": [
+            {
+              "label": "Verantwortlicher",
+              "value": "Elektro Weber\nHauptstraße 12\n77933 Lahr"
+            },
+            {
+              "label": "Kontakt",
+              "value": "info@elektro-weber.example.com"
+            }
+          ],
+          "sections": [
+            {
+              "heading": "Hosting",
+              "placeholder": "[Angaben zum Hosting-Anbieter ergänzen]"
+            },
+            {
+              "heading": "Kontaktaufnahme",
+              "placeholder": "[Angaben zur Verarbeitung von Anfragen ergänzen]"
+            },
+            {
+              "heading": "Ihre Rechte",
+              "placeholder": "[Standardtext zu Betroffenenrechten ergänzen]"
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "premium",
+    "slug": "/",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "hero",
+        "variant": "image-full",
+        "content": {
+          "eyebrow": "Elektrofachbetrieb in Lahr",
+          "headline": "Strom, der einfach funktioniert",
+          "subheadline": "Installation, Reparatur und Notdienst für Privathaushalte und Betriebe — zuverlässig und zu fairen Preisen.",
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101",
+          "secondary_label": "Unsere Leistungen",
+          "secondary_href": "/leistungen",
+          "image": {
+            "slot_id": "hero",
+            "alt": "Elektriker bei der Arbeit am Sicherungskasten",
+            "source": "placeholder"
+          },
+          "points": [
+            "Festpreis nach Besichtigung",
+            "Termin meist innerhalb einer Woche",
+            "Meisterbetrieb"
+          ]
+        }
+      },
+      {
+        "component_type": "services",
+        "variant": "grid-cards",
+        "content": {
+          "headline": "Was wir für Sie tun",
+          "intro": "Von der Steckdose bis zur Photovoltaikanlage.",
+          "items": [
+            {
+              "title": "Elektroinstallation",
+              "description": "Neubau, Umbau und Erweiterung — sauber geplant und nach aktuellen Vorschriften ausgeführt."
+            },
+            {
+              "title": "Reparatur und Störungsbehebung",
+              "description": "Wenn der Strom ausfällt oder eine Sicherung ständig fliegt, finden wir die Ursache."
+            },
+            {
+              "title": "Smart Home",
+              "description": "Licht, Heizung und Rollläden bequem steuern, auch nachträglich."
+            },
+            {
+              "title": "E-Check und Prüfungen",
+              "description": "Wiederkehrende Prüfung elektrischer Anlagen für Ihre Sicherheit und Versicherung."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "about",
+        "variant": "stats-highlight",
+        "content": {
+          "headline": "Ein Betrieb, den Sie persönlich kennen",
+          "paragraphs": [
+            "Elektro Weber ist ein kleiner Meisterbetrieb. Sie sprechen mit den Menschen, die am Ende auch bei Ihnen vor Ort arbeiten.",
+            "Wir nehmen uns Zeit für eine ehrliche Beratung und sagen Ihnen vorab, was etwas kostet."
+          ],
+          "image": {
+            "slot_id": "about",
+            "alt": "Das Team von Elektro Weber",
+            "source": "placeholder"
+          },
+          "stats": [
+            {
+              "value": "20+",
+              "label": "Jahre Erfahrung"
+            },
+            {
+              "value": "1.200+",
+              "label": "Aufträge"
+            },
+            {
+              "value": "24 h",
+              "label": "Notdienst"
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "testimonials",
+        "variant": "cards-grid",
+        "content": {
+          "headline": "Das sagen unsere Kunden",
+          "items": [
+            {
+              "name": "Beispielkundin A.",
+              "quote": "Pünktlich, freundlich und sauber gearbeitet. Gern wieder.",
+              "rating": 5
+            },
+            {
+              "name": "Beispielkunde B.",
+              "quote": "Der Fehler war nach einer Stunde gefunden. Faire Rechnung.",
+              "rating": 5
+            },
+            {
+              "name": "Beispielkundin C.",
+              "quote": "Gute Beratung zum Smart Home, ohne etwas aufzuschwatzen.",
+              "rating": 4
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "faq",
+        "variant": "accordion",
+        "content": {
+          "headline": "Häufige Fragen",
+          "items": [
+            {
+              "question": "Wie schnell bekomme ich einen Termin?",
+              "answer": "In der Regel innerhalb einer Woche. Bei Störungen versuchen wir, am selben Tag zu helfen."
+            },
+            {
+              "question": "Was kostet ein Besuch?",
+              "answer": "Nach einer Besichtigung nennen wir einen Festpreis. Kleinere Reparaturen rechnen wir nach Aufwand ab."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "premium",
+    "slug": "/leistungen",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "services",
+        "variant": "grid-cards",
+        "content": {
+          "headline": "Leistungen im Überblick",
+          "items": [
+            {
+              "title": "Elektroinstallation",
+              "description": "Steckdosen, Beleuchtung, Verteilerschränke und Netzwerkdosen."
+            },
+            {
+              "title": "Photovoltaik und Speicher",
+              "description": "Anschluss und Inbetriebnahme Ihrer Anlage inklusive Zählerschrank."
+            },
+            {
+              "title": "Ladestation für Elektroautos",
+              "description": "Wallbox-Installation mit Beratung zur Förderung."
+            },
+            {
+              "title": "Notdienst",
+              "description": "Bei Stromausfall und Gefahr erreichen Sie uns rund um die Uhr."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "faq",
+        "variant": "accordion",
+        "content": {
+          "headline": "Fragen zu unseren Leistungen",
+          "items": [
+            {
+              "question": "Arbeiten Sie auch für Gewerbekunden?",
+              "answer": "Ja, von der Arztpraxis bis zur kleinen Werkstatt."
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "premium",
+    "slug": "/kontakt",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "contact",
+        "variant": "form-info-side",
+        "content": {
+          "headline": "So erreichen Sie uns",
+          "intro": "Rufen Sie einfach an oder schreiben Sie uns — wir melden uns zeitnah.",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "opening_hours": [
+            {
+              "days": "Montag bis Freitag",
+              "hours": "7:30 bis 17:00 Uhr"
+            },
+            {
+              "days": "Notdienst",
+              "hours": "rund um die Uhr"
+            }
+          ],
+          "form_note": "Die Daten aus dem Formular verwenden wir nur, um Ihre Anfrage zu beantworten."
+        }
+      },
+      {
+        "component_type": "location",
+        "variant": "map-text",
+        "content": {
+          "headline": "Hier finden Sie uns",
+          "address": "Hauptstraße 12, 77933 Lahr",
+          "area_text": "Wir sind in Lahr und im Umkreis von etwa 30 Kilometern für Sie unterwegs.",
+          "map_query": "Lahr/Schwarzwald"
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "premium",
+    "slug": "/impressum",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "legal",
+        "variant": "standard",
+        "content": {
+          "kind": "impressum",
+          "title": "Impressum",
+          "notice": "Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.",
+          "fields": [
+            {
+              "label": "Anbieter",
+              "value": "Elektro Weber"
+            },
+            {
+              "label": "Anschrift",
+              "value": "Hauptstraße 12\n77933 Lahr"
+            },
+            {
+              "label": "Telefon",
+              "value": "07821 555 0101"
+            },
+            {
+              "label": "E-Mail",
+              "value": "info@elektro-weber.example.com"
+            },
+            {
+              "label": "Umsatzsteuer-ID",
+              "value": null
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "style": "premium",
+    "slug": "/datenschutz",
+    "sections": [
+      {
+        "component_type": "navbar",
+        "variant": "standard",
+        "content": {
+          "logo_text": "Elektro Weber",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "cta_label": "Jetzt anrufen",
+          "cta_href": "tel:078215550101"
+        }
+      },
+      {
+        "component_type": "legal",
+        "variant": "standard",
+        "content": {
+          "kind": "datenschutz",
+          "title": "Datenschutzerklärung",
+          "notice": "Entwurf: Dieser Text ist eine Vorlage und muss vor der Veröffentlichung geprüft und bestätigt werden.",
+          "fields": [
+            {
+              "label": "Verantwortlicher",
+              "value": "Elektro Weber\nHauptstraße 12\n77933 Lahr"
+            },
+            {
+              "label": "Kontakt",
+              "value": "info@elektro-weber.example.com"
+            }
+          ],
+          "sections": [
+            {
+              "heading": "Hosting",
+              "placeholder": "[Angaben zum Hosting-Anbieter ergänzen]"
+            },
+            {
+              "heading": "Kontaktaufnahme",
+              "placeholder": "[Angaben zur Verarbeitung von Anfragen ergänzen]"
+            },
+            {
+              "heading": "Ihre Rechte",
+              "placeholder": "[Standardtext zu Betroffenenrechten ergänzen]"
+            }
+          ]
+        }
+      },
+      {
+        "component_type": "footer",
+        "variant": "standard",
+        "content": {
+          "company_name": "Elektro Weber",
+          "tagline": "Elektrotechnik für Haus und Betrieb in Lahr und Umgebung.",
+          "address": "Hauptstraße 12\n77933 Lahr",
+          "phone": "07821 555 0101",
+          "email": "info@elektro-weber.example.com",
+          "links": [
+            {
+              "label": "Startseite",
+              "href": "/"
+            },
+            {
+              "label": "Leistungen",
+              "href": "/leistungen"
+            },
+            {
+              "label": "Kontakt",
+              "href": "/kontakt"
+            }
+          ],
+          "legal_links": [
+            {
+              "label": "Impressum",
+              "href": "/impressum"
+            },
+            {
+              "label": "Datenschutz",
+              "href": "/datenschutz"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
