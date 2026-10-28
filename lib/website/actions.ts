@@ -18,6 +18,8 @@ import {
   type RunAi,
   type RunState,
 } from "./pipeline";
+import { generatePassword } from "./password";
+import { revalidateSites } from "./revalidate";
 import { previewSlug } from "./slug";
 import type { AssembleResult } from "./pipeline";
 
@@ -29,6 +31,9 @@ export type DemoStepResult = {
   /** nächster auszuführender Schritt, null wenn der Lauf fertig ist */
   step?: StepId | null;
   done?: boolean;
+  /** Passwort der neuen Demo: wird nur hier einmalig geliefert, nirgends im Klartext gespeichert */
+  password?: string;
+  warning?: string;
 };
 
 const fail = (message: string): DemoStepResult => ({ error: message });
@@ -127,14 +132,16 @@ export async function advanceDemoRun(runId: string, expectedStep: string): Promi
         await failRun(supabase, runId, message, true, result.report);
         return fail(message);
       }
-      const siteId = await saveDemoSite(supabase, lead, result, spent);
+      const saved = await saveDemoSite(supabase, lead, result, spent);
+      const siteId = saved.siteId;
       await supabase
         .from("site_generation_runs")
         .update({ status: "DONE", site_id: siteId, quality_report: result.report, error_message: null })
         .eq("id", runId);
       await logLeadEvent(supabase, userId, "lead.demo_created", lead.id, { company_name: lead.company_name, cost_eur: spent });
       refreshLeadViews();
-      return { error: null, runId, step: null, done: true };
+      const ok = await revalidateSites([saved.slug, ...saved.replacedSlugs]);
+      return { error: null, runId, step: null, done: true, password: saved.password, ...(ok ? {} : { warning: "Der site-engine konnte nicht benachrichtigt werden; die Demo erscheint spätestens nach einigen Minuten." }) };
     }
 
     const runAi: RunAi = async (args) => {
@@ -185,9 +192,19 @@ export async function advanceDemoRun(runId: string, expectedStep: string): Promi
   }
 }
 
-async function saveDemoSite(supabase: Supabase, lead: Lead, result: AssembleResult, costEur: number): Promise<string> {
+const DEMO_DAYS = 14;
+
+async function saveDemoSite(
+  supabase: Supabase,
+  lead: Lead,
+  result: AssembleResult,
+  costEur: number,
+): Promise<{ siteId: string; slug: string; password: string; replacedSlugs: string[] }> {
+  const password = generatePassword();
+  let slug = "";
   let site: { id: string } | null = null;
   for (let attempt = 0; attempt < 3 && !site; attempt++) {
+    slug = previewSlug(lead.company_name);
     const { data, error } = await supabase
       .from("sites")
       .insert({
@@ -195,7 +212,8 @@ async function saveDemoSite(supabase: Supabase, lead: Lead, result: AssembleResu
         company_name: lead.company_name,
         style: result.style,
         status: "PREVIEW",
-        preview_slug: previewSlug(lead.company_name),
+        preview_slug: slug,
+        preview_expires_at: new Date(Date.now() + DEMO_DAYS * 24 * 60 * 60 * 1000).toISOString(),
         primary_phone: lead.phone,
         primary_cta_label: lead.phone ? "Jetzt anrufen" : "Anfrage senden",
         generation_cost_estimate: costEur,
@@ -214,6 +232,9 @@ async function saveDemoSite(supabase: Supabase, lead: Lead, result: AssembleResu
       result.pages.map((p) => ({ site_id: site!.id, slug: p.slug, page_type: p.page_type, sections: p.sections, seo: p.seo })),
     );
     if (pageError) throw new Error(`Seiten konnten nicht gespeichert werden: ${pageError.message}`);
+    // Jede neue Demo ist von Anfang an geschützt. Gelingt das nicht, bleibt sie nicht ungeschützt stehen.
+    const { error: passwordError } = await supabase.rpc("set_preview_password", { p_site: site.id, p_password: password });
+    if (passwordError) throw new Error(`Passwortschutz konnte nicht gesetzt werden: ${passwordError.message}`);
   } catch (error) {
     await supabase.from("sites").delete().eq("id", site.id); // halbfertige Website nicht stehen lassen
     throw error;
@@ -227,7 +248,12 @@ async function saveDemoSite(supabase: Supabase, lead: Lead, result: AssembleResu
     .not("site_id", "is", null)
     .neq("site_id", site.id);
   const oldIds = (earlier ?? []).map((r) => r.site_id as string);
-  if (oldIds.length > 0) await supabase.from("sites").delete().in("id", oldIds).eq("status", "PREVIEW");
+  let replacedSlugs: string[] = [];
+  if (oldIds.length > 0) {
+    const { data: old } = await supabase.from("sites").select("preview_slug").in("id", oldIds).eq("status", "PREVIEW");
+    replacedSlugs = (old ?? []).map((o) => o.preview_slug as string).filter(Boolean);
+    await supabase.from("sites").delete().in("id", oldIds).eq("status", "PREVIEW");
+  }
 
-  return site.id;
+  return { siteId: site.id, slug, password, replacedSlugs };
 }

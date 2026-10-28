@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { PasswordReveal } from "@/components/domain/PasswordReveal";
 import { advanceDemoRun, startDemoRun } from "@/lib/website/actions";
 import { STEPS, STEP_LABELS, type StepId } from "@/lib/website/steps";
 
@@ -27,6 +28,8 @@ export function DemoRunner({
   const [running, setRunning] = useState(false);
   const [step, setStep] = useState<StepId | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [created, setCreated] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
 
   async function drive(runId: string, first: StepId) {
     let current: StepId | null = first;
@@ -37,7 +40,11 @@ export function DemoRunner({
         setError(result.error);
         return;
       }
-      if (result.done) return;
+      if (result.done) {
+        setCreated(result.password ?? null);
+        setWarning(result.warning ?? null);
+        return;
+      }
       current = result.step ?? null;
     }
   }
@@ -46,6 +53,8 @@ export function DemoRunner({
     if (!resume && confirmText && !window.confirm(confirmText)) return;
     setRunning(true);
     setError(null);
+    setCreated(null);
+    setWarning(null);
     try {
       if (resume) {
         await drive(resume.runId, resume.step);
@@ -84,6 +93,8 @@ export function DemoRunner({
         </ol>
       ) : null}
       {running ? <p className="text-xs text-muted-foreground">Das dauert insgesamt etwa 1 bis 2 Minuten. Bitte die Seite offen lassen.</p> : null}
+      {created ? <PasswordReveal password={created} onClose={() => setCreated(null)} /> : null}
+      {warning ? <p className="text-sm text-muted-foreground">{warning}</p> : null}
       {error ? (
         <p role="alert" className="max-w-xl text-sm text-destructive">
           {error}

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { DemoAccess } from "@/components/domain/DemoAccess";
 import { DemoRunner } from "@/components/domain/DemoRunner";
-import { formatDateTime } from "@/lib/datetime";
+import { formatDate, formatDateTime } from "@/lib/datetime";
 import type { CompanyProfileRow } from "@/lib/intelligence/types";
-import { isResumable, previewUrl, type DemoSite, type GenerationRun } from "@/lib/website/queries";
+import { isExpired, isResumable, previewUrl, type DemoSite, type GenerationRun } from "@/lib/website/queries";
 import { type StepId } from "@/lib/website/steps";
 
 const STYLE_LABELS = { modern: "Modern", traditional: "Klassisch", premium: "Hochwertig" } as const;
@@ -75,9 +76,14 @@ export function DemoPanel({
           >
             {previewUrl(site.preview_slug)}
           </a>
-          <p className="text-xs text-muted-foreground">
-            Entwurf mit Hinweisband, für Suchmaschinen gesperrt. Die Adresse ist nicht erratbar, aber noch nicht passwortgeschützt (folgt in Milestone 5).
-          </p>
+          <p className="text-xs text-muted-foreground">Entwurf mit Hinweisband, für Suchmaschinen gesperrt.</p>
+          <DemoAccess
+            siteId={site.id}
+            link={previewUrl(site.preview_slug)}
+            protectedByPassword={site.preview_protected}
+            expiresLabel={site.preview_expires_at ? formatDate(site.preview_expires_at) : null}
+            expired={isExpired(site.preview_expires_at)}
+          />
         </Card>
       ) : null}
 
